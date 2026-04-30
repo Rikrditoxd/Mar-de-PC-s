@@ -11,6 +11,7 @@
     <nav style="background-color:#333; padding:10px;">
     <ul style="list-style:none; margin:0; padding:0; display:flex; gap:20px;">
         <li><img src="imagenes/minimalista.png" alt="" height="100px"></li>
+        <li><a href="index.php" style="color:white; text-decoration:none;">Inicio</a></li>
         <li><a href="catalogo.php" style="color:white; text-decoration:none;">Catálogo</a></li>
         <li><a href="contacto.php" style="color:white; text-decoration:none;">Contacto</a></li>
         <li><a href="login.php" style="color:white; text-decoration:none;">Login</a></li>

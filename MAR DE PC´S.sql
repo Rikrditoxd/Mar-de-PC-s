@@ -103,16 +103,16 @@ INSERT INTO categorias (nombre, descripcion) VALUES
   ('Almacenamiento', 'Discos duros, SSD y memorias USB');
 
 INSERT INTO productos (id_categoria, nombre, descripcion, precio, stock, imagen_url) VALUES
-  (1, 'Portatil Asus VivoBook 15',  'Intel i5, 8GB RAM, 512GB SSD, pantalla 15.6"', 599.99, 10, 'portatil_asus.jpg'),
-  (1, 'Portatil Lenovo IdeaPad 3',  'AMD Ryzen 5, 8GB RAM, 256GB SSD',              449.99,  8, 'portatil_lenovo.jpg'),
-  (2, 'Samsung Galaxy A55',         '6.6", 128GB, camara triple 50MP',              399.99, 20, 'samsung_a55.jpg'),
-  (2, 'Xiaomi Redmi Note 13',       '6.67", 256GB, bateria 5000mAh',               229.99, 15, 'redmi_note13.jpg'),
-  (3, 'Tarjeta Grafica RTX 4060',   'NVIDIA RTX 4060 8GB GDDR6',                   329.99,  5, 'rtx4060.jpg'),
-  (3, 'Memoria RAM Kingston 16GB',  'DDR4 3200MHz, 2x8GB',                          49.99, 30, 'ram_kingston.jpg'),
-  (4, 'Teclado Mecanico Logitech',  'Switch Red, retroiluminado RGB',               89.99, 12, 'teclado_logitech.jpg'),
-  (4, 'Raton Razer DeathAdder V3',  '30000 DPI, sensor optico Focus Pro',           79.99, 18, 'raton_razer.jpg'),
-  (5, 'SSD Samsung 1TB',            'NVMe M.2, lectura 7000MB/s',                   99.99, 25, 'ssd_samsung.jpg'),
-  (5, 'Disco Duro Seagate 2TB',     'HDD 3.5", 7200RPM, SATA III',                  59.99, 20, 'hdd_seagate.jpg');
+  (1, 'Portatil Asus VivoBook 15',  'Intel i5, 8GB RAM, 512GB SSD, pantalla 15.6"', 599.99, 10, 'https://www.avisualpro.es/wp-content/uploads/2020/06/ordenador-portatil-asus-zenbook-14-8gb-512gb.jpg'),
+  (1, 'Portatil Lenovo IdeaPad 3',  'AMD Ryzen 5, 8GB RAM, 256GB SSD',              449.99,  8, 'https://p3-ofp.static.pub/fes/cms/2022/08/08/tyvv5qcmfzpff7w96ntd5z2ei5jqqt807152.png'),
+  (2, 'Samsung Galaxy A55',         '6.6", 128GB, camara triple 50MP',              399.99, 20, 'https://img.global.news.samsung.com/mx/wp-content/uploads/2024/03/Galaxy-A55-5G-and-A35-5G_main2.jpg'),
+  (2, 'Xiaomi Redmi Note 13',       '6.67", 256GB, bateria 5000mAh',               229.99, 15, 'https://i02.appmifile.com/mi-com-product/fly-birds/redmi-note-13/M/33f308b6070029de2882282a4303a32f.png'),
+  (3, 'Tarjeta Grafica RTX 4060',   'NVIDIA RTX 4060 8GB GDDR6',                   329.99,  5, 'https://www.nvidia.com/content/dam/en-zz/Solutions/geforce/ada/rtx-4060-4060ti/geforce-rtx-4060-ti-og-1200x630.jpg'),
+  (3, 'Memoria RAM Kingston 16GB',  'DDR4 3200MHz, 2x8GB',                          49.99, 30, 'https://thumb.pccomponentes.com/w-530-530/articles/43/432674/1740-kingston-fury-beast-ddr4-3200-mhz-16gb-cl16.jpg'),
+  (4, 'Teclado Mecanico Logitech',  'Switch Red, retroiluminado RGB',               89.99, 12, 'https://i.blogs.es/d7d475/gpro2/450_1000.jpg'),
+  (4, 'Raton Razer DeathAdder V3',  '30000 DPI, sensor optico Focus Pro',           79.99, 18, 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRQXkQQzbr_sPJl1D9HhGQgewSNoXgvPhcotw&s'),
+  (5, 'SSD Samsung 1TB',            'NVMe M.2, lectura 7000MB/s',                   99.99, 25, 'https://thumbs.static-thomann.de/thumb/padthumb600x600/pics/bdb/_59/596652/20215651_800.jpg'),
+  (5, 'Disco Duro Seagate 2TB',     'HDD 3.5", 7200RPM, SATA III',                  59.99, 20, 'https://m.media-amazon.com/images/I/51V8DKzQlsL._AC_UF894,1000_QL80_.jpg');
 
 -- Usuarios de ejemplo (recuerda hashear las contraseñas con bcrypt en el codigo)
 INSERT INTO usuarios (nombre, apellidos, email, password, administrador) VALUES

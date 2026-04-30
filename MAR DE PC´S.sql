@@ -3,11 +3,11 @@
 --  Proyecto Fin de Curso - FP
 -- ============================================================
 
-CREATE DATABASE IF NOT EXISTS ecommerce_tecnologia
+CREATE DATABASE IF NOT EXISTS mar_de_pcs
   CHARACTER SET utf8mb4
   COLLATE utf8mb4_unicode_ci;
 
-USE ecommerce_tecnologia;
+USE mar_de_pcs;
 
 -- ============================================================
 --  1. USUARIOS

@@ -34,5 +34,11 @@
             </a>
         </div>
 
+        <div class="d-flex">
+            <a href="registro.php" class="btn btn-outline-light">
+                Registrarse
+            </a>
+        </div>
+
     </div>
 </nav>

@@ -1,4 +1,7 @@
-<?php include("config/conexion.php"); ?>
+<?php 
+session_start();
+include("config/conexion.php"); 
+?>
 
 <!DOCTYPE html>
 <html>

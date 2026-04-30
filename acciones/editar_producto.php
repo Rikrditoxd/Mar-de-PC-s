@@ -20,7 +20,13 @@ if (!$resultado) {
 $producto = $resultado->fetch_assoc();
 ?>
 
-<form action="../acciones/actualizar_producto.php" method="POST">
+<head>
+    <title>Editar producto</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+</head>
+
+<div class="container">
+    <form action="../acciones/actualizar_producto.php" method="POST">
 
     <input type="hidden" name="id_producto" value="<?= $producto['id_producto'] ?>">
 
@@ -33,6 +39,8 @@ $producto = $resultado->fetch_assoc();
     <label>Stock</label>
     <input type="number" name="stock" value="<?= $producto['stock'] ?>" class="form-control">
 
+    
+
     <label>Imagen URL</label>
     <input type="text" name="imagen_url" value="<?= $producto['imagen_url'] ?>" class="form-control">
 
@@ -40,3 +48,4 @@ $producto = $resultado->fetch_assoc();
     <button type="submit" class="btn btn-success">Guardar cambios</button>
 
 </form>
+</div>

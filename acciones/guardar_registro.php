@@ -16,7 +16,7 @@ $result = $conn->query($check);
 
 if ($result->num_rows > 0) {
     echo "<script>
-        alert('Este correo ya está registrado');
+        alert('Este correo ya está registrado, intente con otro');
         window.location.href = '../registro.php';
     </script>";
     exit();

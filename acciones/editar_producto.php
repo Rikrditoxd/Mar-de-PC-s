@@ -1,5 +1,5 @@
 <?php
-include("conexion.php");
+include("../config/conexion.php");
 
 // Comprobar que viene el id
 if (!isset($_GET['id'])) {
@@ -20,7 +20,7 @@ if (!$resultado) {
 $producto = $resultado->fetch_assoc();
 ?>
 
-<form action="actualizar_producto.php" method="POST">
+<form action="../acciones/actualizar_producto.php" method="POST">
 
     <input type="hidden" name="id_producto" value="<?= $producto['id_producto'] ?>">
 

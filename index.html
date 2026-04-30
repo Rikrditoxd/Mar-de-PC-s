@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TechSolutions - Ordenadores, Mantenimiento y Más</title>
+    <!-- <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet"> -->
+     <link rel="stylesheet" href="style.css">
+    <style>
+        body { font-family: Arial, sans-serif; }
+        .hero { background: linear-gradient(to right, #007bff, #28a745); color: white; padding: 100px 0; text-align: center; }
+        .services { padding: 50px 0; }
+        .contact { background-color: #f8f9fa; padding: 50px 0; }
+        .logo {
+            border-radius: 30px;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Barra de navegación -->
+    <nav class="navbar">
+        <div class="container">
+            <img src="imagenes/ChatGPT Image 20 oct 2025, 14_24_24.png" alt="" width="100" class="logo">
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item"><a class="nav-link" href="#servicios">Servicios</a></li>
+                    <li class="nav-item"><a class="nav-link" href="#sobre-nosotros">Sobre Nosotros</a></li>
+                    <li class="nav-item"><a class="nav-link" href="#contacto">Contacto</a></li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Sección Hero -->
+    <section class="hero">
+        <div class="container">
+            <h1>Bienvenido a Mar de PC`s</h1>
+            <p>Tu aliado en ordenadores, mantenimiento, asesoría y piezas de calidad.</p>
+            <a href="#contacto" class="btn btn-light btn-lg">Contáctanos</a>
+        </div>
+    </section>
+
+    <!-- Sección Servicios -->
+    <section id="servicios" class="services">
+        <div class="container">
+            <h2 class="text-center mb-4">Nuestros Servicios</h2>
+            <div class="row">
+                <div class="col-md-3 text-center">
+                    <h4>Ordenadores</h4>
+                    <p>Venta y configuración de PCs personalizados.</p>
+                </div>
+                <div class="col-md-3 text-center">
+                    <h4>Mantenimiento</h4>
+                    <p>Reparaciones rápidas y eficientes para tu equipo.</p>
+                </div>
+                <div class="col-md-3 text-center">
+                    <h4>Asesoría</h4>
+                    <p>Consejos expertos para optimizar tu tecnología.</p>
+                </div>
+                <div class="col-md-3 text-center">
+                    <h4>Piezas</h4>
+                    <p>Componentes originales y compatibles.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Sección Sobre Nosotros -->
+    <section id="sobre-nosotros" class="py-5">
+        <div class="container">
+            <h2 class="text-center mb-4">Sobre Nosotros</h2>
+            <p class="text-center">En TechSolutions, somos apasionados por la tecnología. Ofrecemos soluciones integrales para particulares y empresas, con años de experiencia en el sector.</p>
+        </div>
+    </section>
+
+    <!-- Sección Contacto -->
+    <section id="contacto" class="contact">
+        <div class="container">
+            <h2 class="text-center mb-4">Contáctanos</h2>
+            <form>
+                <div class="mb-3">
+                    <label for="name" class="form-label">Nombre</label>
+                    <input type="text" class="form-control" id="name">
+                </div>
+                <div class="mb-3">
+                    <label for="email" class="form-label">Correo Electrónico</label>
+                    <input type="email" class="form-control" id="email">
+                </div>
+                <div class="mb-3">
+                    <label for="message" class="form-label">Mensaje</label>
+                    <textarea class="form-control" id="message" rows="3"></textarea>
+                </div>
+                <button type="submit" class="btn btn-primary">Enviar</button>
+            </form>
+        </div>
+    </section>
+
+    <!-- Pie de página -->
+    <footer class="bg-dark text-white text-center py-3">
+        <p>&copy; 2023 TechSolutions. Todos los derechos reservados.</p>
+    </footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

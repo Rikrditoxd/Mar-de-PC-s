@@ -8,7 +8,7 @@ session_start();
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>TechSolutions - Ordenadores, Mantenimiento y Más</title>
+    <title>MAR DE PC´S - Ordenadores, Mantenimiento y Más</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
      <link rel="stylesheet" href="assets/css/style.css">
 </head>
@@ -21,7 +21,7 @@ session_start();
     <section class="hero">
         <div class="container">
             <h1>Bienvenido a Mar de PC`s</h1>
-            <p>Tu aliado en ordenadores, mantenimiento, asesoría y piezas de calidad.</p>
+            <p>Tu aliado en ordenadores, mantenimiento, asesoría y piezas de calidad en Asturias.</p>
             <a href="#contacto" class="btn btn-light btn-lg">Contáctanos</a>
         </div>
     </section>
@@ -33,27 +33,27 @@ session_start();
             <div class="row g-4 justify-content-start gap-5">
 
                 <div class="card" style="width: 18rem;">
-        <img class="card-img-top" src="imagenes/asus.jpg" alt="Card image cap">
+        <img class="card-img-top" src="https://tse1.explicit.bing.net/th/id/OIP.iGv5cxLIKkIXxkAbkQEWowHaE8?r=0&rs=1&pid=ImgDetMain&o=7&rm=3" alt="Card image cap">
         <div class="card-body">
-            <h5 class="card-title">Card title</h5>
+            <h5 class="card-title">Todo lo que necesitas para tu ordenador</h5>
             <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
             <a href="#" class="btn btn-primary">Go somewhere</a>
         </div>
         </div>
 
         <div class="card" style="width: 18rem;">
-        <img class="card-img-top" src="imagenes/amd.jpg" alt="Card image cap">
+        <img class="card-img-top" src="https://tse3.mm.bing.net/th/id/OIP.X3MMi46-xNl6XQXtQsMOHgHaE7?r=0&rs=1&pid=ImgDetMain&o=7&rm=3" alt="Card image cap">
         <div class="card-body">
-            <h5 class="card-title">Card title</h5>
+            <h5 class="card-title">La mejor asistencia de Asturias</h5>
             <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
             <a href="#" class="btn btn-primary">Go somewhere</a>
         </div>
         </div>
 
         <div class="card" style="width: 18rem;">
-        <img class="card-img-top" src="imagenes/asus.jpg" alt="Card image cap">
+        <img class="card-img-top" src="https://asesorias-iso.cl/wp-content/uploads/2023/09/Agregar-un-titulo-1.png" alt="Card image cap">
         <div class="card-body">
-            <h5 class="card-title">Card title</h5>
+            <h5 class="card-title">Cursos y gestiones al mejor precio</h5>
             <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
             <a href="#" class="btn btn-primary">Go somewhere</a>
         </div>

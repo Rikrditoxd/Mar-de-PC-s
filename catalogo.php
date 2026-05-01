@@ -3,9 +3,27 @@
 session_start();
 include("config/conexion.php");
 
-$sql = "SELECT * FROM productos";
-$resultado = $conn->query($sql);
 
+//sentencia para buscar productos
+
+$sql = "SELECT * FROM productos WHERE 1=1";
+
+// FILTRO POR CATEGORIA
+if (isset($_GET['categoria']) && $_GET['categoria'] != "") {
+    $categoria = intval($_GET['categoria']);
+    $sql .= " AND id_categoria = $categoria";
+}
+
+$sql_cat = "SELECT * FROM categorias";
+$categorias = $conn->query($sql_cat);
+
+// BUSCADOR
+if (isset($_GET['buscar']) && !empty($_GET['buscar'])) {
+    $buscar = $conn->real_escape_string($_GET['buscar']);
+    $sql .= " AND nombre LIKE '%$buscar%'";
+}
+
+$resultado = $conn->query($sql);
 
 ?>
 
@@ -26,17 +44,50 @@ $resultado = $conn->query($sql);
 <body>
 
 
-    <div class="container mt-4">
-        <h1>Catálogo de productos</h1>
-
+    <div class="container-fluid mt-4">
         <div class="row">
+
+            <!-- SIDEBAR -->
+            <div class="col-md-3">
+                <div class="card p-3">
+
+                    <ul class="list-group mb-3">
+                        <li class="list-group-item">
+                            <a href="catalogo.php">Todas</a>
+                        </li>
+
+                        <!-- busqueda por categoria de la bbdd -->
+                        <?php while ($cat = $categorias->fetch_assoc()): ?>
+                            <li class="list-group-item">
+                                <a href="catalogo.php?categoria=<?= $cat['id_categoria'] ?>">
+                                    <?= $cat['nombre'] ?>
+                                </a>
+                            </li>
+                        <?php endwhile; ?>
+                    </ul>
+
+                    <h5>Buscar</h5>
+
+                    <form method="GET" action="catalogo.php">
+                        <input type="text" name="buscar" class="form-control mb-2" placeholder="Buscar producto...">
+                        <button class="btn btn-primary w-100">Buscar</button>
+                    </form>
+
+                </div>
+            </div>
+
+            <div class="col-md-9">
+    <h1>Catálogo de productos</h1>
+
+    <div class="row">
+
+        <?php if ($resultado->num_rows > 0): ?>
             <?php while ($fila = $resultado->fetch_assoc()): ?>
 
                 <div class="col-md-4 mb-4">
                     <a href="producto.php?id=<?= $fila['id_producto'] ?>" class="card-link">
 
-                        <div class="card">
-
+                        <div class="card h-100">
                             <img src="<?= $fila['imagen_url'] ?>" class="card-img-top">
 
                             <div class="card-body">
@@ -44,15 +95,18 @@ $resultado = $conn->query($sql);
                                 <p class="card-text"><?= $fila['descripcion'] ?></p>
                                 <p><strong><?= $fila['precio'] ?> €</strong></p>
                             </div>
-
                         </div>
 
                     </a>
                 </div>
 
             <?php endwhile; ?>
-        </div>
+        <?php else: ?>
+            <p>No hay productos.</p>
+        <?php endif; ?>
+
     </div>
+</div>
 
 </body>
 

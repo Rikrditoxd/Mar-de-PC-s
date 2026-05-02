@@ -79,6 +79,8 @@ $resultado = $conn->query($sql);
             <div class="col-md-9">
     <h1>Catálogo de productos</h1>
 
+    <br>
+
     <div class="row">
 
         <?php if ($resultado->num_rows > 0): ?>

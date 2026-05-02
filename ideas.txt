@@ -1,4 +1,6 @@
 --chatbot
 --simulacion de pasarela de pago
 --% de descuento (funcional)
+--Buscador en la parte de arriba de catalogo
+--Mejorar main page
 --

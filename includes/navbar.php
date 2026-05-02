@@ -37,6 +37,12 @@ if (session_status() === PHP_SESSION_NONE) {
 
             <?php if (isset($_SESSION['id_usuario'])): ?>
 
+                <li class="nav-item">
+                    <a class="btn btn-outline-light" href="carrito.php">
+                        Carrito🛒
+                    </a>
+                </li>
+
                 <!-- USUARIO LOGUEADO -->
                 <li class="nav-item d-flex align-items-center text-white me-3">
                     👤 <?= $_SESSION['nombre'] ?>

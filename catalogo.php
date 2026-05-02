@@ -66,6 +66,17 @@ $resultado = $conn->query($sql);
                         <?php endwhile; ?>
                     </ul>
 
+
+
+                </div>
+            </div>
+
+            <div class="col-md-9">
+                <!-- <h1>Catálogo de productos</h1> -->
+
+                <br>
+
+                <div>
                     <h5>Buscar</h5>
 
                     <form method="GET" action="catalogo.php">
@@ -73,42 +84,39 @@ $resultado = $conn->query($sql);
                         <button class="btn btn-primary w-100">Buscar</button>
                     </form>
 
+
+                </div>
+
+                <br>
+
+                <div class="row">
+
+                    <?php if ($resultado->num_rows > 0): ?>
+                        <?php while ($fila = $resultado->fetch_assoc()): ?>
+
+                            <div class="col-md-4 mb-4">
+                                <a href="producto.php?id=<?= $fila['id_producto'] ?>" class="card-link">
+
+                                    <div class="card h-100">
+                                        <img src="<?= $fila['imagen_url'] ?>" class="card-img-top">
+
+                                        <div class="card-body">
+                                            <h5 class="card-title"><?= $fila['nombre'] ?></h5>
+                                            <p class="card-text"><?= $fila['descripcion'] ?></p>
+                                            <p><strong><?= $fila['precio'] ?> €</strong></p>
+                                        </div>
+                                    </div>
+
+                                </a>
+                            </div>
+
+                        <?php endwhile; ?>
+                    <?php else: ?>
+                        <p>No hay productos.</p>
+                    <?php endif; ?>
+
                 </div>
             </div>
-
-            <div class="col-md-9">
-    <h1>Catálogo de productos</h1>
-
-    <br>
-
-    <div class="row">
-
-        <?php if ($resultado->num_rows > 0): ?>
-            <?php while ($fila = $resultado->fetch_assoc()): ?>
-
-                <div class="col-md-4 mb-4">
-                    <a href="producto.php?id=<?= $fila['id_producto'] ?>" class="card-link">
-
-                        <div class="card h-100">
-                            <img src="<?= $fila['imagen_url'] ?>" class="card-img-top">
-
-                            <div class="card-body">
-                                <h5 class="card-title"><?= $fila['nombre'] ?></h5>
-                                <p class="card-text"><?= $fila['descripcion'] ?></p>
-                                <p><strong><?= $fila['precio'] ?> €</strong></p>
-                            </div>
-                        </div>
-
-                    </a>
-                </div>
-
-            <?php endwhile; ?>
-        <?php else: ?>
-            <p>No hay productos.</p>
-        <?php endif; ?>
-
-    </div>
-</div>
 
 </body>
 

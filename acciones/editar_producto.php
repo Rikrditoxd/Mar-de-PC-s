@@ -41,6 +41,9 @@ $producto = $resultado->fetch_assoc();
         <label>Stock</label>
         <input type="number" name="stock" value="<?= $producto['stock'] ?>" class="form-control">
 
+        <label>Descripcion</label>
+        <input type="text" name="descripcion" value="<?= $producto['descripcion'] ?>" class="form-control">
+
         <label>Imagen principal URL</label>
         <input type="text" name="imagen_url" value="<?= $producto['imagen_url'] ?>" class="form-control">
 

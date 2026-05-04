@@ -25,7 +25,7 @@ session_start();
                         <h3 class="mb-0 text-center">Contáctanos</h3>
                     </div>
                     <div class="card-body">
-                        <form action="procesar_contacto.php" method="POST">
+                        <form action="acciones/procesar_contacto.php" method="POST">
                             <div class="mb-3">
                                 <label for="nombre" class="form-label">Nombre completo</label>
                                 <input type="text" class="form-control" id="nombre" name="nombre" required placeholder="Ingresa tu nombre">

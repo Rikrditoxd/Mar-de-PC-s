@@ -61,3 +61,15 @@ body { font-family: Arial, sans-serif; }
 }
 
 
+html, body {
+    height: 100%;
+}
+
+body {
+    display: flex;
+    flex-direction: column;
+}
+
+main {
+    flex: 1;
+}

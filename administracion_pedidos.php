@@ -39,7 +39,7 @@ $resultado = $conn->query($sql);
 
     <div class="container mt-5">
 
-    <h2>📦 Administración de pedidos</h2>
+    <h2>Administrar pedidos</h2>
 
     <table class="table table-striped mt-3">
 

@@ -60,7 +60,7 @@ $items = $conn->query($sql_items);
 
 <body>
 
-<?php include("../includes/navbar.php"); ?>
+
 
 <div class="container mt-5">
 

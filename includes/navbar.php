@@ -1,102 +1,113 @@
-<?php
-if (session_status() === PHP_SESSION_NONE) {
-    session_start();
-}
-?>
+<!DOCTYPE html>
+<html lang="en">
 
-<nav class="navbar navbar-expand-lg navbar-dark bg-dark sticky-top px-4">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        /* Solo en pantallas grandes */
+        @media (min-width: 992px) {
+            .navbar-center-desktop {
+                position: absolute;
+                left: 50%;
+                transform: translateX(-50%);
+            }
+        }
+    </style>
+</head>
 
-    <!-- LOGO -->
-    <a class="navbar-brand d-flex align-items-center" href="index.php">
-        <img src="assets/imagenes/minimalista.png" height="40" class="me-2">
-    </a>
+<body>
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark sticky-top">
 
-    <div class="collapse navbar-collapse">
+        <div class="container-fluid position-relative">
 
-        <!-- CENTRO -->
-        <ul class="navbar-nav mx-auto">
+            <!-- LOGO (izquierda) -->
+            <a class="navbar-brand d-flex align-items-center" href="index.php">
+                <img src="assets/imagenes/minimalista.png" height="40" class="me-2">
+            </a>
 
-            <li class="nav-item">
-                <a class="nav-link" href="index.php">Inicio</a>
-            </li>
+            <!-- BOTÓN RESPONSIVE -->
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarContenido">
+                <span class="navbar-toggler-icon"></span>
+            </button>
 
-            <li class="nav-item">
-                <a class="nav-link" href="catalogo.php">Nuestros Productos</a>
-            </li>
+            <div class="collapse navbar-collapse" id="navbarContenido">
 
-            <li class="nav-item">
-                <a class="nav-link" href="contacto.php">Contacto</a>
-            </li>
+                <!-- 🔥 CENTRO REAL -->
+                <ul class="navbar-nav navbar-center-desktop">
 
-            <?php if (isset($_SESSION['administrador']) && $_SESSION['administrador'] == 1): ?>
-                <li class="nav-item">
-                    <a class="nav-link" href="administracion.php">Admin</a>
-                </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="index.php">Inicio</a>
+                    </li>
 
-                <li class="nav-item">
-                    <a class="nav-link" href="administracion_pedidos.php">Pedidos</a>
-                </li>
-            <?php endif; ?>
+                    <li class="nav-item">
+                        <a class="nav-link" href="catalogo.php">Nuestros Productos</a>
+                    </li>
 
-        </ul>
+                    <li class="nav-item">
+                        <a class="nav-link" href="contacto.php">Contacto</a>
+                    </li>
 
-        <!-- DERECHA -->
-        <ul class="navbar-nav ms-auto">
+                    <?php if (isset($_SESSION['administrador']) && $_SESSION['administrador'] == 1): ?>
+                        <li class="nav-item">
+                            <a class="nav-link" href="administracion.php">Admin</a>
+                        </li>
 
-            <?php if (isset($_SESSION['id_usuario'])): ?>
+                        <li class="nav-item">
+                            <a class="nav-link" href="administracion_pedidos.php">Pedidos</a>
+                        </li>
 
-                <!-- CARRITO -->
-                <li class="nav-item me-2">
-                    <a class="btn btn-outline-light" href="carrito.php">
-                        Carrito 🛒
-                    </a>
-                </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="administracion_contacto.php">Mensajes</a>
+                        </li>
+                    <?php endif; ?>
 
-                <!-- DROPDOWN USUARIO (CORREGIDO) -->
-                <li class="nav-item dropdown me-2">
+                </ul>
 
-                    <a class="nav-link dropdown-toggle text-white"
-                       href="#"
-                       role="button"
-                       data-bs-toggle="dropdown">
-                        👤 <?= $_SESSION['nombre'] ?>
-                    </a>
+                <!-- DERECHA -->
+                <ul class="navbar-nav ms-auto">
 
-                    <ul class="dropdown-menu dropdown-menu-end">
+                    <?php if (isset($_SESSION['id_usuario'])): ?>
 
-                        <li>
-                            <a class="dropdown-item" href="pedidos.php">
-                                📦 Mis pedidos
+                        <li class="nav-item me-2">
+                            <a class="btn btn-outline-light" href="carrito.php">
+                                Carrito 🛒
                             </a>
                         </li>
 
-                        <li>
-                            <a class="dropdown-item" href="perfil.php">
-                                👤 Mi perfil
+                        <li class="nav-item dropdown me-2">
+                            <a class="nav-link dropdown-toggle text-white"
+                                href="#"
+                                role="button"
+                                data-bs-toggle="dropdown">
+                                👤 <?= $_SESSION['nombre'] ?>
                             </a>
+
+                            <ul class="dropdown-menu dropdown-menu-end">
+                                <li><a class="dropdown-item" href="pedidos.php">📦 Mis pedidos</a></li>
+                                <li><a class="dropdown-item" href="perfil.php">👤 Mi perfil</a></li>
+                            </ul>
                         </li>
 
-                    </ul>
+                        <li class="nav-item">
+                            <a class="btn btn-outline-light" href="logout.php">Salir</a>
+                        </li>
 
-                </li>
+                    <?php else: ?>
 
-                <!-- SALIR -->
-                <li class="nav-item">
-                    <a class="btn btn-outline-light" href="logout.php">
-                        Salir
-                    </a>
-                </li>
+                        <li class="nav-item">
+                            <a class="btn btn-outline-light" href="login.php">Login</a>
+                            <a class="btn btn-outline-light" href="registro.php">Registro</a>
+                        </li>
 
-            <?php else: ?>
+                    <?php endif; ?>
 
-                <li class="nav-item">
-                    <a class="btn btn-outline-light" href="login.php">Login</a>
-                    <a class="btn btn-outline-light" href="registro.php">Registro</a>
-                </li>
+                </ul>
 
-            <?php endif; ?>
+            </div>
+        </div>
+    </nav>
+</body>
 
-        </ul>
-
-    </div>
-</nav>
+</html>

@@ -26,7 +26,7 @@ $user = $conn->query($sql)->fetch_assoc();
 
 <div class="container mt-5">
 
-    <h2>👤 Mi perfil</h2>
+    <h2>Mi perfil</h2>
 
     <form action="acciones/actualizar_perfil.php" method="POST">
 
@@ -53,6 +53,8 @@ $user = $conn->query($sql)->fetch_assoc();
     </form>
 
 </div>
+
+<br>
 <?php include("includes/footer.php"); ?>
 </body>
 </html>

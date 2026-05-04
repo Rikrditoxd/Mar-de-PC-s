@@ -1,5 +1,4 @@
 <?php
-
 session_start();
 include("config/conexion.php");
 
@@ -22,7 +21,6 @@ $sql_sub = "SELECT * FROM subcategorias";
 $res_sub = $conn->query($sql_sub);
 
 $subcategorias = [];
-
 while ($row = $res_sub->fetch_assoc()) {
     $subcategorias[$row['id_categoria']][] = $row;
 }
@@ -32,43 +30,41 @@ while ($row = $res_sub->fetch_assoc()) {
 // ==========================
 $sql = "SELECT * FROM productos WHERE 1=1";
 
-// FILTRO CATEGORIA
 if (isset($_GET['categoria']) && $_GET['categoria'] != "") {
     $categoria = intval($_GET['categoria']);
     $sql .= " AND id_categoria = $categoria";
 }
 
-// FILTRO SUBCATEGORIA
 if (isset($_GET['subcategoria']) && $_GET['subcategoria'] != "") {
     $sub = intval($_GET['subcategoria']);
     $sql .= " AND id_subcategoria = $sub";
 }
 
-// BUSCADOR
 if (isset($_GET['buscar']) && $_GET['buscar'] != "") {
     $buscar = $conn->real_escape_string($_GET['buscar']);
     $sql .= " AND nombre LIKE '%$buscar%'";
 }
 
-// ==========================
-// EJECUTAR QUERY FINAL
-// ==========================
 $resultado = $conn->query($sql);
 
+// ==========================
+// GUARDAR PRODUCTOS Y URLs EN BASE64
+// ==========================
+$productos = [];
+while ($fila = $resultado->fetch_assoc()) {
+    $productos[] = $fila;
+}
+
+$urls_base64 = base64_encode(json_encode(array_column($productos, 'imagen_url')));
 ?>
 
 <!DOCTYPE html>
 <html lang="es">
-
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Administración</title>
-
-    <!-- Bootstrap -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-
-    <!-- CSS -->
     <link rel="stylesheet" href="assets/css/style.css">
 </head>
 
@@ -79,71 +75,46 @@ $resultado = $conn->query($sql);
     <div class="container-fluid mt-4">
         <div class="row">
 
-        <!-- BUSCADOR -->
-                    <h5>Buscar</h5>
+            <!-- BUSCADOR -->
+            <h5>Buscar</h5>
+            <form method="GET" action="administracion.php">
+                <input type="text" name="buscar" class="form-control mb-2" placeholder="Buscar producto...">
+                <button class="btn btn-primary w-100">Buscar</button>
+            </form>
 
-                    <form method="GET" action="administracion.php">
-                        <input type="text" name="buscar" class="form-control mb-2" placeholder="Buscar producto...">
-                        <button class="btn btn-primary w-100">Buscar</button>
-                    </form>
+            <br>
 
-                    <br>
-                    
             <!-- SIDEBAR -->
             <div class="col-md-3">
                 <div class="card p-3">
-
                     <h5>Categorías</h5>
-
                     <ul class="list-group mb-3">
 
-                        <!-- TODAS -->
                         <li class="list-group-item">
                             <a href="administracion.php">Todas</a>
                         </li>
 
-                        <?php
-                        // traer subcategorías agrupadas
-                        $sql_sub = "SELECT * FROM subcategorias";
-                        $res_sub = $conn->query($sql_sub);
-
-                        $subcategorias = [];
-
-                        while ($row = $res_sub->fetch_assoc()) {
-                            $subcategorias[$row['id_categoria']][] = $row;
-                        }
-                        ?>
-
                         <?php while ($cat = $categorias->fetch_assoc()): ?>
                             <li class="list-group-item">
-
-                                <!-- CATEGORÍA -->
-                                <a href="administracion.php?categoria=<?= $cat['id_categoria'] ?>">
-                                    <?= $cat['nombre'] ?>
+                                <a href="administracion.php?categoria=<?= htmlspecialchars($cat['id_categoria']) ?>">
+                                    <?= htmlspecialchars($cat['nombre']) ?>
                                 </a>
 
-                                <!-- SUBCATEGORÍAS -->
                                 <?php if (isset($subcategorias[$cat['id_categoria']])): ?>
                                     <ul class="list-unstyled ms-3 mt-2">
-
                                         <?php foreach ($subcategorias[$cat['id_categoria']] as $sub): ?>
                                             <li>
-                                                <a href="administracion.php?subcategoria=<?= $sub['id_subcategoria'] ?>">
-                                                    <?= $sub['nombre'] ?>
+                                                <a href="administracion.php?subcategoria=<?= htmlspecialchars($sub['id_subcategoria']) ?>">
+                                                    <?= htmlspecialchars($sub['nombre']) ?>
                                                 </a>
                                             </li>
                                         <?php endforeach; ?>
-
                                     </ul>
                                 <?php endif; ?>
-
                             </li>
                         <?php endwhile; ?>
 
                     </ul>
-
-                    
-
                 </div>
             </div>
 
@@ -152,7 +123,6 @@ $resultado = $conn->query($sql);
 
                 <div class="d-flex justify-content-between align-items-center mb-3">
                     <h1>Panel de Administración</h1>
-
                     <a href="acciones/crear_producto.php" class="btn btn-success">
                         + Añadir producto
                     </a>
@@ -171,23 +141,22 @@ $resultado = $conn->query($sql);
                     </thead>
 
                     <tbody>
-                        <?php if ($resultado->num_rows > 0): ?>
-                            <?php while ($fila = $resultado->fetch_assoc()): ?>
+                        <?php if (count($productos) > 0): ?>
+                            <?php foreach ($productos as $i => $fila): ?>
                                 <tr>
-                                    <td><?= $fila['id_producto'] ?></td>
-                                    <td><?= $fila['nombre'] ?></td>
-                                    <td><?= $fila['precio'] ?> €</td>
-                                    <td><?= $fila['stock'] ?></td>
+                                    <td><?= htmlspecialchars($fila['id_producto']) ?></td>
+                                    <td><?= htmlspecialchars($fila['nombre']) ?></td>
+                                    <td><?= htmlspecialchars($fila['precio']) ?> €</td>
+                                    <td><?= htmlspecialchars($fila['stock']) ?></td>
                                     <td>
-                                        <img src="<?= $fila['imagen_url'] ?>" width="50">
+                                        <img id="img-<?= $i ?>" width="50" alt="<?= htmlspecialchars($fila['nombre']) ?>">
                                     </td>
                                     <td>
-                                        <a href="acciones/editar_producto.php?id=<?= $fila['id_producto'] ?>" class="btn btn-warning btn-sm">
+                                        <a href="acciones/editar_producto.php?id=<?= htmlspecialchars($fila['id_producto']) ?>" class="btn btn-warning btn-sm">
                                             Editar
                                         </a>
-
                                         <form action="acciones/eliminar_producto.php" method="POST" style="display:inline;">
-                                            <input type="hidden" name="id" value="<?= $fila['id_producto'] ?>">
+                                            <input type="hidden" name="id" value="<?= htmlspecialchars($fila['id_producto']) ?>">
                                             <button type="submit" class="btn btn-danger btn-sm"
                                                 onclick="return confirm('¿Seguro que quieres eliminar este producto?')">
                                                 Eliminar
@@ -195,22 +164,28 @@ $resultado = $conn->query($sql);
                                         </form>
                                     </td>
                                 </tr>
-                            <?php endwhile; ?>
+                            <?php endforeach; ?>
                         <?php else: ?>
                             <tr>
                                 <td colspan="6" class="text-center">No hay productos</td>
                             </tr>
                         <?php endif; ?>
                     </tbody>
-
                 </table>
 
-            </div> <!-- col-md-9 -->
+            </div>
+        </div>
+    </div>
 
-        </div> <!-- row -->
-    </div> <!-- container-fluid -->
     <?php include("includes/footer.php"); ?>
-</body>
 
+    <script>
+        const urls = JSON.parse(atob("<?= $urls_base64 ?>"));
+        urls.forEach((url, i) => {
+            const img = document.getElementById('img-' + i);
+            if (img) img.src = url;
+        });
+    </script>
+
+</body>
 </html>
-```

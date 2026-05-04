@@ -2,24 +2,18 @@
 session_start();
 include("config/conexion.php");
 
-/* =========================
-   FILTROS
-========================= */
 $sql = "SELECT * FROM productos WHERE 1=1";
 
-/* FILTRO CATEGORIA */
 if (isset($_GET['categoria']) && $_GET['categoria'] != "") {
     $categoria = intval($_GET['categoria']);
     $sql .= " AND id_categoria = $categoria";
 }
 
-/* FILTRO SUBCATEGORIA */
 if (isset($_GET['subcategoria']) && $_GET['subcategoria'] != "") {
     $sub = intval($_GET['subcategoria']);
     $sql .= " AND id_subcategoria = $sub";
 }
 
-/* BUSCADOR */
 if (isset($_GET['buscar']) && !empty($_GET['buscar'])) {
     $buscar = $conn->real_escape_string($_GET['buscar']);
     $sql .= " AND nombre LIKE '%$buscar%'";
@@ -27,9 +21,6 @@ if (isset($_GET['buscar']) && !empty($_GET['buscar'])) {
 
 $resultado = $conn->query($sql);
 
-/* =========================
-   CATEGORIAS Y SUBCATEGORIAS
-========================= */
 $sql_cat = "SELECT * FROM categorias";
 $categorias = $conn->query($sql_cat);
 
@@ -37,17 +28,21 @@ $sql_sub = "SELECT * FROM subcategorias";
 $result_sub = $conn->query($sql_sub);
 
 $subcategorias = [];
-
 while ($row = $result_sub->fetch_assoc()) {
     $subcategorias[$row['id_categoria']][] = $row;
 }
+
+// Guardar productos en array y generar URLs en base64
+$productos = [];
+while ($fila = $resultado->fetch_assoc()) {
+    $productos[] = $fila;
+}
+
+$urls_base64 = base64_encode(json_encode(array_column($productos, 'imagen_url')));
 ?>
 
-
-
 <!DOCTYPE html>
-<html lang="en">
-
+<html lang="es">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -58,15 +53,12 @@ while ($row = $result_sub->fetch_assoc()) {
 <?php include("includes/navbar.php"); ?>
 
 <body>
-
-
     <div class="container-fluid mt-4">
         <div class="row">
 
             <!-- SIDEBAR -->
             <div class="col-md-3">
                 <div class="card p-3">
-
                     <ul class="list-group mb-3">
                         <li class="list-group-item">
                             <a href="catalogo.php">Todas</a>
@@ -74,83 +66,74 @@ while ($row = $result_sub->fetch_assoc()) {
 
                         <?php while ($cat = $categorias->fetch_assoc()): ?>
                             <li class="list-group-item">
-
-                                <!-- CATEGORÍA PRINCIPAL (SE MANTIENE IGUAL) -->
-                                <a href="catalogo.php?categoria=<?= $cat['id_categoria'] ?>">
-                                    <?= $cat['nombre'] ?>
+                                <a href="catalogo.php?categoria=<?= htmlspecialchars($cat['id_categoria']) ?>">
+                                    <?= htmlspecialchars($cat['nombre']) ?>
                                 </a>
 
-                                <!-- 🔽 SUBCATEGORÍAS (SOLO PARA COMPONENTES Y PERIFÉRICOS) -->
                                 <?php if (isset($subcategorias[$cat['id_categoria']])): ?>
                                     <ul class="list-unstyled ms-3 mt-2">
-
                                         <?php foreach ($subcategorias[$cat['id_categoria']] as $sub): ?>
                                             <li>
-                                                <a href="catalogo.php?subcategoria=<?= $sub['id_subcategoria'] ?>">
-                                                    <?= $sub['nombre'] ?>
+                                                <a href="catalogo.php?subcategoria=<?= htmlspecialchars($sub['id_subcategoria']) ?>">
+                                                    <?= htmlspecialchars($sub['nombre']) ?>
                                                 </a>
                                             </li>
                                         <?php endforeach; ?>
-
                                     </ul>
                                 <?php endif; ?>
-
                             </li>
                         <?php endwhile; ?>
                     </ul>
-
-
-
                 </div>
             </div>
 
+            <!-- CONTENIDO -->
             <div class="col-md-9">
-                <!-- <h1>Catálogo de productos</h1> -->
-
                 <br>
-
                 <div>
                     <h5>Buscar</h5>
-
                     <form method="GET" action="catalogo.php">
                         <input type="text" name="buscar" class="form-control mb-2" placeholder="Buscar producto...">
                         <button class="btn btn-primary w-100">Buscar</button>
                     </form>
-
-
                 </div>
 
                 <br>
 
-                <div class="row">
-
-                    <?php if ($resultado->num_rows > 0): ?>
-                        <?php while ($fila = $resultado->fetch_assoc()): ?>
-
+                <div class="row" id="productos-container">
+                    <?php if (count($productos) > 0): ?>
+                        <?php foreach ($productos as $i => $fila): ?>
                             <div class="col-md-4 mb-4">
-                                <a href="producto.php?id=<?= $fila['id_producto'] ?>" class="card-link">
-
+                                <a href="producto.php?id=<?= htmlspecialchars($fila['id_producto']) ?>" class="card-link">
                                     <div class="card h-100">
-                                        <img src="<?= $fila['imagen_url'] ?>" class="card-img-top">
-
+                                        <img id="img-<?= $i ?>" class="card-img-top" alt="<?= htmlspecialchars($fila['nombre']) ?>">
                                         <div class="card-body">
-                                            <h5 class="card-title"><?= $fila['nombre'] ?></h5>
-                                            <p class="card-text"><?= $fila['descripcion'] ?></p>
-                                            <p><strong><?= $fila['precio'] ?> €</strong></p>
+                                            <h5 class="card-title"><?= htmlspecialchars($fila['nombre']) ?></h5>
+                                            <p class="card-text"><?= htmlspecialchars($fila['descripcion']) ?></p>
+                                            <p><strong><?= htmlspecialchars($fila['precio']) ?> €</strong></p>
                                         </div>
                                     </div>
-
                                 </a>
                             </div>
-
-                        <?php endwhile; ?>
+                        <?php endforeach; ?>
                     <?php else: ?>
                         <p>No hay productos.</p>
                     <?php endif; ?>
-
                 </div>
             </div>
-            <?php include("includes/footer.php"); ?>
-</body>
 
+        </div>
+    </div>
+
+    <?php include("includes/footer.php"); ?>
+
+    <script>
+        const urls = JSON.parse(atob("<?= $urls_base64 ?>"));
+        urls.forEach((url, i) => {
+            const img = document.getElementById('img-' + i);
+            if (img) img.src = url;
+        });
+    </script>
+
+</body>
 </html>

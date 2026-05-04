@@ -72,7 +72,10 @@ $carrito = $_SESSION['carrito'] ?? [];
             </a>
 
         <?php endif; ?>
+
+        
     </div>
+    DISCLAIMER: ESTA ES UNA PAGINA WEB CON FINES EDUCATIVOS Y NO COMERCIALES, LOS PROCESOS DE COMPRA SON UNA SIMULACION
 <?php include("includes/footer.php"); ?>
 </body>
 

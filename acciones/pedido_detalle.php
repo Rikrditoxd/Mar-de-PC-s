@@ -64,7 +64,7 @@ $items = $conn->query($sql_items);
 
 <div class="container mt-5">
 
-    <h2>📦 Pedido #<?= $pedido['id_pedido'] ?></h2>
+    <h2>Pedido #<?= $pedido['id_pedido'] ?></h2>
 
     <div class="card p-3 mb-4">
 
@@ -76,7 +76,7 @@ $items = $conn->query($sql_items);
 
     </div>
 
-    <h4>🛒 Productos</h4>
+    <h4>Productos</h4>
 
     <table class="table table-striped">
 

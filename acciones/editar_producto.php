@@ -1,23 +1,37 @@
 <?php
 include("../config/conexion.php");
 
-// Comprobar que viene el id
+// comprobar id
 if (!isset($_GET['id'])) {
     die("ID no recibido");
 }
 
-$id = $_GET['id'];
+$id = intval($_GET['id']);
 
-// IMPORTANTE: usa el nombre real de tu columna en la BD
+// producto
 $sql = "SELECT * FROM productos WHERE id_producto = $id";
-
 $resultado = $conn->query($sql);
 
 if (!$resultado) {
-    die("Error en la consulta: " . $conn->error);
+    die("Error: " . $conn->error);
 }
 
 $producto = $resultado->fetch_assoc();
+
+
+// categorías
+$sql_cat = "SELECT * FROM categorias";
+$categorias = $conn->query($sql_cat);
+
+// subcategorías
+$sql_sub = "SELECT * FROM subcategorias";
+$res_sub = $conn->query($sql_sub);
+
+$subcategorias = [];
+
+while ($row = $res_sub->fetch_assoc()) {
+    $subcategorias[$row['id_categoria']][] = $row;
+}
 ?>
 
 <head>
@@ -25,7 +39,9 @@ $producto = $resultado->fetch_assoc();
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
 </head>
 
-<div class="container">
+<div class="container mt-4">
+
+    <h2>Editar producto</h2>
 
     <!-- FORMULARIO PRINCIPAL -->
     <form action="../acciones/actualizar_producto.php" method="POST">
@@ -41,23 +57,60 @@ $producto = $resultado->fetch_assoc();
         <label>Stock</label>
         <input type="number" name="stock" value="<?= $producto['stock'] ?>" class="form-control">
 
-        <label>Descripcion</label>
+        <label>Descripción</label>
         <input type="text" name="descripcion" value="<?= $producto['descripcion'] ?>" class="form-control">
 
         <label>Imagen principal URL</label>
         <input type="text" name="imagen_url" value="<?= $producto['imagen_url'] ?>" class="form-control">
 
+        <!-- ========================= -->
+        <!-- CATEGORÍA -->
+        <!-- ========================= -->
+        <label class="mt-3">Categoría</label>
+        <select name="id_categoria" id="categoria" class="form-control">
+
+            <?php while ($cat = $categorias->fetch_assoc()): ?>
+                <option value="<?= $cat['id_categoria'] ?>"
+                    <?= ($producto['id_categoria'] == $cat['id_categoria']) ? 'selected' : '' ?>>
+                    <?= $cat['nombre'] ?>
+                </option>
+            <?php endwhile; ?>
+
+        </select>
+
+        <!-- ========================= -->
+        <!-- SUBCATEGORÍA -->
+        <!-- ========================= -->
+        <label class="mt-3">Subcategoría</label>
+
+        <select name="id_subcategoria" id="subcategoria" class="form-control">
+
+            <option value="">-- Selecciona --</option>
+
+            <?php foreach ($subcategorias as $id_cat => $subs): ?>
+                <?php foreach ($subs as $sub): ?>
+                    <option value="<?= $sub['id_subcategoria'] ?>"
+                        data-cat="<?= $sub['id_categoria'] ?>"
+                        <?= ($producto['id_subcategoria'] == $sub['id_subcategoria']) ? 'selected' : '' ?>>
+                        <?= $sub['nombre'] ?>
+                    </option>
+                <?php endforeach; ?>
+            <?php endforeach; ?>
+
+        </select>
+
         <br>
+
         <button type="submit" class="btn btn-success">Guardar cambios</button>
     </form>
 
-
-    <!-- ========================= -->
-    <!-- GESTIÓN DE IMÁGENES -->
-    <!-- ========================= -->
-
     <hr>
-    <h5>Imágenes del producto (carousel)</h5>
+
+    <!-- ========================= -->
+    <!-- IMÁGENES -->
+    <!-- ========================= -->
+
+    <h5>Imágenes del producto</h5>
 
     <?php
     $sql_imgs = "SELECT * FROM producto_imagenes WHERE id_producto = $id";
@@ -77,20 +130,47 @@ $producto = $resultado->fetch_assoc();
         <?php endwhile; ?>
     </ul>
 
-
-    <!-- FORMULARIO AÑADIR IMAGEN (SEPARADO) -->
+    <!-- añadir imagen -->
     <form action="../acciones/agregar_imagen.php" method="POST">
         <input type="hidden" name="id_producto" value="<?= $producto['id_producto'] ?>">
 
-        <label>Nueva imagen (URL)</label>
+        <label>Nueva imagen</label>
         <input type="text" name="imagen_url" class="form-control">
 
         <button class="btn btn-primary mt-2">Añadir imagen</button>
     </form>
-    <form action="../administracion.php" method="POST">
-            <button class="btn btn-danger mt-3">
-                Volver
-            </button>
-        </form>
+
+    <form action="../administracion.php">
+        <button class="btn btn-danger mt-3">Volver</button>
+    </form>
 
 </div>
+
+<!-- ========================= -->
+<!-- JS FILTRO SUBCATEGORÍA -->
+<!-- ========================= -->
+<script>
+const subcategorias = <?= json_encode($subcategorias); ?>;
+
+const categoria = document.getElementById("categoria");
+const subSelect = document.getElementById("subcategoria");
+
+function filtrarSub() {
+    const id = categoria.value;
+
+    subSelect.innerHTML = '<option value="">-- Selecciona --</option>';
+
+    if (subcategorias[id]) {
+        subcategorias[id].forEach(sub => {
+
+            const option = document.createElement("option");
+            option.value = sub.id_subcategoria;
+            option.textContent = sub.nombre;
+
+            subSelect.appendChild(option);
+        });
+    }
+}
+
+categoria.addEventListener("change", filtrarSub);
+</script>

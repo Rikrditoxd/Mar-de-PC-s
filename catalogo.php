@@ -1,23 +1,25 @@
 <?php
-
 session_start();
 include("config/conexion.php");
 
-
-//sentencia para buscar productos
-
+/* =========================
+   FILTROS
+========================= */
 $sql = "SELECT * FROM productos WHERE 1=1";
 
-// FILTRO POR CATEGORIA
+/* FILTRO CATEGORIA */
 if (isset($_GET['categoria']) && $_GET['categoria'] != "") {
     $categoria = intval($_GET['categoria']);
     $sql .= " AND id_categoria = $categoria";
 }
 
-$sql_cat = "SELECT * FROM categorias";
-$categorias = $conn->query($sql_cat);
+/* FILTRO SUBCATEGORIA */
+if (isset($_GET['subcategoria']) && $_GET['subcategoria'] != "") {
+    $sub = intval($_GET['subcategoria']);
+    $sql .= " AND id_subcategoria = $sub";
+}
 
-// BUSCADOR
+/* BUSCADOR */
 if (isset($_GET['buscar']) && !empty($_GET['buscar'])) {
     $buscar = $conn->real_escape_string($_GET['buscar']);
     $sql .= " AND nombre LIKE '%$buscar%'";
@@ -25,6 +27,20 @@ if (isset($_GET['buscar']) && !empty($_GET['buscar'])) {
 
 $resultado = $conn->query($sql);
 
+/* =========================
+   CATEGORIAS Y SUBCATEGORIAS
+========================= */
+$sql_cat = "SELECT * FROM categorias";
+$categorias = $conn->query($sql_cat);
+
+$sql_sub = "SELECT * FROM subcategorias";
+$result_sub = $conn->query($sql_sub);
+
+$subcategorias = [];
+
+while ($row = $result_sub->fetch_assoc()) {
+    $subcategorias[$row['id_categoria']][] = $row;
+}
 ?>
 
 
@@ -56,12 +72,29 @@ $resultado = $conn->query($sql);
                             <a href="catalogo.php">Todas</a>
                         </li>
 
-                        <!-- busqueda por categoria de la bbdd -->
                         <?php while ($cat = $categorias->fetch_assoc()): ?>
                             <li class="list-group-item">
+
+                                <!-- CATEGORÍA PRINCIPAL (SE MANTIENE IGUAL) -->
                                 <a href="catalogo.php?categoria=<?= $cat['id_categoria'] ?>">
                                     <?= $cat['nombre'] ?>
                                 </a>
+
+                                <!-- 🔽 SUBCATEGORÍAS (SOLO PARA COMPONENTES Y PERIFÉRICOS) -->
+                                <?php if (isset($subcategorias[$cat['id_categoria']])): ?>
+                                    <ul class="list-unstyled ms-3 mt-2">
+
+                                        <?php foreach ($subcategorias[$cat['id_categoria']] as $sub): ?>
+                                            <li>
+                                                <a href="catalogo.php?subcategoria=<?= $sub['id_subcategoria'] ?>">
+                                                    <?= $sub['nombre'] ?>
+                                                </a>
+                                            </li>
+                                        <?php endforeach; ?>
+
+                                    </ul>
+                                <?php endif; ?>
+
                             </li>
                         <?php endwhile; ?>
                     </ul>
@@ -117,7 +150,7 @@ $resultado = $conn->query($sql);
 
                 </div>
             </div>
-<?php include("includes/footer.php"); ?>
+            <?php include("includes/footer.php"); ?>
 </body>
 
 </html>

@@ -22,6 +22,7 @@ session_start();
         <div class="container">
             <h1>Bienvenido a Mar de PC`s</h1>
             <p>Tu aliado en ordenadores, mantenimiento, asesoría y piezas de calidad en Asturias.</p>
+            <p>DISCLAIMER: ESTA ES UNA PAGINA WEB CON FINES EDUCATIVOS Y NO COMERCIALES, LOS PROCESOS DE COMPRA SON UNA SIMULACION</p>
             <a href="catalogo.php" class="btn btn-light btn-lg">Nuestros Productos</a>
         </div>
     </section>

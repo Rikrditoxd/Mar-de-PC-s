@@ -2,10 +2,22 @@
 
 
 include("../config/conexion.php");
+
 $categorias = $conn->query("SELECT * FROM categorias");
 
+// traer subcategorias
+$sql = "SELECT * FROM subcategorias";
+$result = $conn->query($sql);
 
+$subcategorias = [];
+
+while ($row = $result->fetch_assoc()) {
+    $subcategorias[$row['id_categoria']][] = $row;
+}
 ?>
+
+
+
 
 
 
@@ -19,7 +31,7 @@ $categorias = $conn->query("SELECT * FROM categorias");
 
 <body>
 
-    
+
 
     <div class="container mt-4">
         <h2>Crear nuevo producto</h2>
@@ -39,13 +51,24 @@ $categorias = $conn->query("SELECT * FROM categorias");
             <input type="number" name="stock" class="form-control" required>
 
             <label>Seleccione Categoria</label>
-            <select name="id_categoria" class="form-control" required>
+            <select name="id_categoria" id="categoria" class="form-control" required>
+                <option value="">-- Selecciona --</option>
                 <?php while ($cat = $categorias->fetch_assoc()): ?>
                     <option value="<?= $cat['id_categoria'] ?>">
                         <?= $cat['nombre'] ?>
                     </option>
                 <?php endwhile; ?>
             </select>
+
+            <br>
+
+            <!-- SUBCATEGORÍA (OCULTA AL INICIO) -->
+            <div id="subcategoria-box" style="display:none;">
+                <label>Subcategoría</label>
+                <select name="id_subcategoria" id="subcategoria" class="form-control">
+                    <option value="">-- Selecciona subcategoría --</option>
+                </select>
+            </div>
 
             <label>Imagen URL</label>
             <input type="text" name="imagen_url" class="form-control" required>
@@ -56,6 +79,39 @@ $categorias = $conn->query("SELECT * FROM categorias");
         </form>
     </div>
 
+
+
+    <!-- script para el formulario con subcategorias -->
+
+    <script>
+const subcategorias = <?= json_encode($subcategorias); ?>;
+
+const categoriaSelect = document.getElementById("categoria");
+const subBox = document.getElementById("subcategoria-box");
+const subSelect = document.getElementById("subcategoria");
+
+categoriaSelect.addEventListener("change", function() {
+
+    const id = parseInt(this.value);
+
+    subSelect.innerHTML = '<option value="">-- Selecciona subcategoría --</option>';
+
+    if (subcategorias[id]) {
+
+        subcategorias[id].forEach(sub => {
+            const option = document.createElement("option");
+            option.value = sub.id_subcategoria;
+            option.textContent = sub.nombre;
+            subSelect.appendChild(option);
+        });
+
+        subBox.style.display = "block";
+
+    } else {
+        subBox.style.display = "none";
+    }
+});
+</script>
 </body>
 
 </html>

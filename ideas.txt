@@ -1,6 +1,12 @@
 --chatbot (???????)
 --simulacion de pasarela de pago
---% de descuento (funcional)
+--% de descuento (funcional) o codigos de descuento
 --Buscador en la parte de arriba de catalogo
 --Mejorar main page (visual)
---
+--seccion de comentarios en producto, likes.
+-- usuario logeado rellena automaticamente form de compra
+-- añadir gestion de cuenta
+-- "olvide contraseña"
+-- seguimiento de pedido (mapa)
+-- preguntas frecuentes
+-- 

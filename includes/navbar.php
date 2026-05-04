@@ -8,7 +8,7 @@ if (session_status() === PHP_SESSION_NONE) {
     <!-- LOGO -->
     <a class="navbar-brand d-flex align-items-center" href="index.php">
         <img src="assets/imagenes/minimalista.png" height="40" class="me-2">
-        
+
     </a>
 
     <div class="collapse navbar-collapse">
@@ -44,8 +44,10 @@ if (session_status() === PHP_SESSION_NONE) {
                 </li>
 
                 <!-- USUARIO LOGUEADO -->
-                <li class="nav-item d-flex align-items-center text-white me-3">
-                    👤 <?= $_SESSION['nombre'] ?>
+                <li class="nav-item">
+                    <a class="nav-link text-white" href="pedidos.php">
+                        👤 <?= $_SESSION['nombre'] ?>
+                    </a>
                 </li>
 
                 <li class="nav-item">

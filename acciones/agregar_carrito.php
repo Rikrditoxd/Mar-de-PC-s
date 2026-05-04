@@ -1,16 +1,18 @@
 <?php
 session_start();
+include("../config/conexion.php");
+
+$id_usuario = $_SESSION['id_usuario'] ?? 1;
 
 $id = $_POST['id_producto'];
 $nombre = $_POST['nombre'];
 $precio = $_POST['precio'];
 
-// Si no existe carrito → crearlo
+// 🧠 SESSION
 if (!isset($_SESSION['carrito'])) {
     $_SESSION['carrito'] = [];
 }
 
-// Si ya existe el producto → sumar cantidad
 if (isset($_SESSION['carrito'][$id])) {
     $_SESSION['carrito'][$id]['cantidad']++;
 } else {
@@ -21,6 +23,12 @@ if (isset($_SESSION['carrito'][$id])) {
     ];
 }
 
-// Redirigir al carrito
+// 💾 BD → insertar o actualizar
+$sql = "INSERT INTO carrito (id_usuario, id_producto, cantidad)
+        VALUES ('$id_usuario', '$id', 1)
+        ON DUPLICATE KEY UPDATE cantidad = cantidad + 1";
+
+$conn->query($sql);
+
 header("Location: ../carrito.php");
 exit();

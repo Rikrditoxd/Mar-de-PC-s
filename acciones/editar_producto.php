@@ -87,5 +87,10 @@ $producto = $resultado->fetch_assoc();
 
         <button class="btn btn-primary mt-2">Añadir imagen</button>
     </form>
+    <form action="../administracion.php" method="POST">
+            <button class="btn btn-danger mt-3">
+                Volver
+            </button>
+        </form>
 
 </div>

@@ -22,7 +22,7 @@ session_start();
         <div class="container">
             <h1>Bienvenido a Mar de PC`s</h1>
             <p>Tu aliado en ordenadores, mantenimiento, asesoría y piezas de calidad en Asturias.</p>
-            <a href="#contacto" class="btn btn-light btn-lg">Contáctanos</a>
+            <a href="catalogo.php" class="btn btn-light btn-lg">Nuestros Productos</a>
         </div>
     </section>
 
@@ -30,14 +30,14 @@ session_start();
 
     <section class="catalogo">
         <div class="container">
-            <div class="row g-4 justify-content-start gap-5">
+            <div class="row g-4 justify-content-center gap-5">
 
                 <div class="card" style="width: 18rem;">
         <img class="card-img-top" src="https://tse1.explicit.bing.net/th/id/OIP.iGv5cxLIKkIXxkAbkQEWowHaE8?r=0&rs=1&pid=ImgDetMain&o=7&rm=3" alt="Card image cap">
         <div class="card-body">
             <h5 class="card-title">Todo lo que necesitas para tu ordenador</h5>
             <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
-            <a href="#" class="btn btn-primary">Go somewhere</a>
+            
         </div>
         </div>
 
@@ -46,7 +46,7 @@ session_start();
         <div class="card-body">
             <h5 class="card-title">La mejor asistencia de Asturias</h5>
             <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
-            <a href="#" class="btn btn-primary">Go somewhere</a>
+            
         </div>
         </div>
 
@@ -55,7 +55,7 @@ session_start();
         <div class="card-body">
             <h5 class="card-title">Cursos y gestiones al mejor precio</h5>
             <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
-            <a href="#" class="btn btn-primary">Go somewhere</a>
+            
         </div>
         </div>
 

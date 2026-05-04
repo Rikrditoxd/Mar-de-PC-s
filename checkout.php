@@ -4,6 +4,7 @@ session_start();
 
 <!DOCTYPE html>
 <html>
+
 <head>
     <title>Checkout</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
@@ -11,30 +12,41 @@ session_start();
 
 <body>
 
-<div class="container mt-5">
-    <h1>Finalizar compra</h1>
+    <div class="container mt-5">
+        <h1>Finalizar compra</h1>
 
-    <form action="acciones/procesar_compra.php" method="POST">
+        <form action="acciones/procesar_compra.php" method="POST">
 
-        <h4>Dirección</h4>
+            <h4>Dirección</h4>
 
-        <input type="text" name="nombre" class="form-control mb-2" placeholder="Nombre completo" required>
-        <input type="text" name="direccion" class="form-control mb-2" placeholder="Dirección" required>
-        <input type="text" name="ciudad" class="form-control mb-2" placeholder="Ciudad" required>
-        <input type="text" name="cp" class="form-control mb-2" placeholder="Código postal" required>
+            <input type="text" name="nombre" class="form-control mb-2" placeholder="Nombre completo" required>
+            <input type="text" name="direccion" class="form-control mb-2" placeholder="Dirección" required>
+            <input type="text" name="ciudad" class="form-control mb-2" placeholder="Ciudad" required>
+            <input type="text" name="cp" class="form-control mb-2" placeholder="Código postal" required>
 
-        <h4>Pago</h4>
+            <h4>Pago</h4>
 
-        <input type="text" name="tarjeta" class="form-control mb-2" placeholder="Número de tarjeta" required>
-        <input type="text" name="caducidad" class="form-control mb-2" placeholder="MM/AA" required>
-        <input type="text" name="cvv" class="form-control mb-2" placeholder="CVV" required>
+            <input type="text" name="titular" class="form-control mb-2" placeholder="Titular" required>
+            <input type="text" name="tarjeta" class="form-control mb-2" placeholder="Número de tarjeta" required>
+            <input type="text" name="caducidad" class="form-control mb-2" placeholder="MM/AA" required>
+            <input type="text" name="cvv" class="form-control mb-2" placeholder="CVV" required>
 
-        <button class="btn btn-primary mt-3">
-            Comprar
-        </button>
+            <button class="btn btn-primary mt-3">
+                Comprar
+            </button>
 
-    </form>
-</div>
+
+
+        </form>
+
+        <form action="carrito.php" method="POST">
+            <button class="btn btn-danger mt-3">
+                Volver
+            </button>
+        </form>
+
+    </div>
 
 </body>
+
 </html>

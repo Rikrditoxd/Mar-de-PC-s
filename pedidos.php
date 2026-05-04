@@ -20,6 +20,7 @@ $resultado = $conn->query($sql);
 <head>
     <title>Mis pedidos</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="assets/css/style.css">
 </head>
 
 <body>
@@ -28,7 +29,7 @@ $resultado = $conn->query($sql);
 
 <div class="container mt-5">
 
-    <h1>📦 Mis pedidos</h1>
+    <h1>Mis pedidos</h1>
 
     <?php if ($resultado->num_rows == 0): ?>
         <p>No has realizado ningún pedido.</p>
@@ -85,6 +86,6 @@ $resultado = $conn->query($sql);
     <?php endif; ?>
 
 </div>
-
+<?php include("includes/footer.php"); ?>
 </body>
 </html>

@@ -73,7 +73,7 @@ $carrito = $_SESSION['carrito'] ?? [];
 
         <?php endif; ?>
     </div>
-
+<?php include("includes/footer.php"); ?>
 </body>
 
 </html>

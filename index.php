@@ -36,7 +36,7 @@ session_start();
         <img class="card-img-top" src="https://tse1.explicit.bing.net/th/id/OIP.iGv5cxLIKkIXxkAbkQEWowHaE8?r=0&rs=1&pid=ImgDetMain&o=7&rm=3" alt="Card image cap">
         <div class="card-body">
             <h5 class="card-title">Todo lo que necesitas para tu ordenador</h5>
-            <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
+            <p class="card-text">Aquí encontraras un gran catalogo de piezas, perifericos y mas!</p>
             
         </div>
         </div>
@@ -45,7 +45,7 @@ session_start();
         <img class="card-img-top" src="https://tse3.mm.bing.net/th/id/OIP.X3MMi46-xNl6XQXtQsMOHgHaE7?r=0&rs=1&pid=ImgDetMain&o=7&rm=3" alt="Card image cap">
         <div class="card-body">
             <h5 class="card-title">La mejor asistencia de Asturias</h5>
-            <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
+            <p class="card-text">Asistencia las 24 horas y ayuda brindada por expertos en el area.</p>
             
         </div>
         </div>
@@ -54,7 +54,7 @@ session_start();
         <img class="card-img-top" src="https://asesorias-iso.cl/wp-content/uploads/2023/09/Agregar-un-titulo-1.png" alt="Card image cap">
         <div class="card-body">
             <h5 class="card-title">Cursos y gestiones al mejor precio</h5>
-            <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
+            <p class="card-text">Extiende tu aprendizaje con nuestros cursos de TIC, con los mejores maestros y tutores.</p>
             
         </div>
         </div>
@@ -121,10 +121,7 @@ session_start();
         </div>
     </section>
 
-    <!-- Pie de página -->
-    <footer class="bg-dark text-white text-center py-3">
-        <p>&copy; 2026 MAR DE PC´s. Todos los derechos reservados.</p>
-    </footer>
+    
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 </body>

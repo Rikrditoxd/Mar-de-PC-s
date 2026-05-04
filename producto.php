@@ -104,8 +104,7 @@ $producto = $resultado->fetch_assoc();
 
     </div>
 
-    <!-- BOOTSTRAP JS -->
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+   <?php include("includes/footer.php"); ?>
 
 
 

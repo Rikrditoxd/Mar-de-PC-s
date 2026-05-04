@@ -3,24 +3,27 @@ if (session_status() === PHP_SESSION_NONE) {
     session_start();
 }
 ?>
+
 <nav class="navbar navbar-expand-lg navbar-dark bg-dark sticky-top px-4">
 
     <!-- LOGO -->
     <a class="navbar-brand d-flex align-items-center" href="index.php">
         <img src="assets/imagenes/minimalista.png" height="40" class="me-2">
-
     </a>
 
     <div class="collapse navbar-collapse">
 
         <!-- CENTRO -->
         <ul class="navbar-nav mx-auto">
+
             <li class="nav-item">
                 <a class="nav-link" href="index.php">Inicio</a>
             </li>
+
             <li class="nav-item">
                 <a class="nav-link" href="catalogo.php">Nuestros Productos</a>
             </li>
+
             <li class="nav-item">
                 <a class="nav-link" href="contacto.php">Contacto</a>
             </li>
@@ -29,7 +32,12 @@ if (session_status() === PHP_SESSION_NONE) {
                 <li class="nav-item">
                     <a class="nav-link" href="administracion.php">Admin</a>
                 </li>
+
+                <li class="nav-item">
+                    <a class="nav-link" href="administracion_pedidos.php">Pedidos</a>
+                </li>
             <?php endif; ?>
+
         </ul>
 
         <!-- DERECHA -->
@@ -37,19 +45,42 @@ if (session_status() === PHP_SESSION_NONE) {
 
             <?php if (isset($_SESSION['id_usuario'])): ?>
 
-                <li class="nav-item">
+                <!-- CARRITO -->
+                <li class="nav-item me-2">
                     <a class="btn btn-outline-light" href="carrito.php">
-                        Carrito🛒
+                        Carrito 🛒
                     </a>
                 </li>
 
-                <!-- USUARIO LOGUEADO -->
-                <li class="nav-item">
-                    <a class="nav-link text-white" href="pedidos.php">
+                <!-- DROPDOWN USUARIO (CORREGIDO) -->
+                <li class="nav-item dropdown me-2">
+
+                    <a class="nav-link dropdown-toggle text-white"
+                       href="#"
+                       role="button"
+                       data-bs-toggle="dropdown">
                         👤 <?= $_SESSION['nombre'] ?>
                     </a>
+
+                    <ul class="dropdown-menu dropdown-menu-end">
+
+                        <li>
+                            <a class="dropdown-item" href="pedidos.php">
+                                📦 Mis pedidos
+                            </a>
+                        </li>
+
+                        <li>
+                            <a class="dropdown-item" href="perfil.php">
+                                👤 Mi perfil
+                            </a>
+                        </li>
+
+                    </ul>
+
                 </li>
 
+                <!-- SALIR -->
                 <li class="nav-item">
                     <a class="btn btn-outline-light" href="logout.php">
                         Salir
@@ -58,15 +89,9 @@ if (session_status() === PHP_SESSION_NONE) {
 
             <?php else: ?>
 
-                <!-- NO LOGUEADO -->
                 <li class="nav-item">
-                    <a class="btn btn-outline-light" href="login.php">
-                        Login
-                    </a>
-
-                    <a class="btn btn-outline-light" href="registro.php">
-                        Registro
-                    </a>
+                    <a class="btn btn-outline-light" href="login.php">Login</a>
+                    <a class="btn btn-outline-light" href="registro.php">Registro</a>
                 </li>
 
             <?php endif; ?>

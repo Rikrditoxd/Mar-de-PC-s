@@ -32,7 +32,6 @@ while ($row = $result_sub->fetch_assoc()) {
     $subcategorias[$row['id_categoria']][] = $row;
 }
 
-// Guardar productos en array y generar URLs en base64
 $productos = [];
 while ($fila = $resultado->fetch_assoc()) {
     $productos[] = $fila;
@@ -56,6 +55,61 @@ $urls_base64 = base64_encode(json_encode(array_column($productos, 'imagen_url'))
             padding: 10px;
             background-color: #f8f9fa;
         }
+
+        /* Botón hamburguesa: solo visible en móvil */
+        #sidebar-toggle {
+            display: none;
+        }
+
+        /* Overlay oscuro detrás del sidebar en móvil */
+        #sidebar-overlay {
+            display: none;
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.4);
+            z-index: 1040;
+        }
+
+        /* Sidebar en móvil: drawer deslizante desde la izquierda */
+        @media (max-width: 767px) {
+            #sidebar-toggle {
+                display: flex;
+                align-items: center;
+                gap: 8px;
+                margin-bottom: 1rem;
+            }
+
+            #sidebar-col {
+                position: fixed;
+                top: 0;
+                left: -280px;
+                width: 280px;
+                height: 100%;
+                z-index: 1050;
+                background: #fff;
+                box-shadow: 2px 0 12px rgba(0,0,0,0.15);
+                transition: left 0.3s ease;
+                overflow-y: auto;
+                padding: 1rem;
+            }
+
+            #sidebar-col.open {
+                left: 0;
+            }
+
+            #sidebar-overlay.open {
+                display: block;
+            }
+
+            #sidebar-close {
+                display: flex;
+            }
+        }
+
+        /* En escritorio, el botón cerrar del drawer no se muestra */
+        #sidebar-close {
+            display: none;
+        }
     </style>
 </head>
 <?php include("includes/navbar.php"); ?>
@@ -64,8 +118,25 @@ $urls_base64 = base64_encode(json_encode(array_column($productos, 'imagen_url'))
     <div class="container-fluid mt-4">
         <div class="row">
 
+            <!-- BOTÓN HAMBURGUESA (solo móvil) -->
+            <div class="col-12">
+                <button id="sidebar-toggle" class="btn btn-outline-secondary">
+                    <span>&#9776;</span> Categorías
+                </button>
+            </div>
+
+            <!-- OVERLAY -->
+            <div id="sidebar-overlay"></div>
+
             <!-- SIDEBAR -->
-            <div class="col-md-3">
+            <div class="col-md-3" id="sidebar-col">
+
+                <!-- Botón cerrar (solo visible en móvil dentro del drawer) -->
+                <div class="d-flex justify-content-between align-items-center mb-3">
+                    <strong>Categorías</strong>
+                    <button id="sidebar-close" class="btn btn-sm btn-outline-secondary">&times; Cerrar</button>
+                </div>
+
                 <div class="card p-3">
                     <ul class="list-group mb-3">
                         <li class="list-group-item">
@@ -136,20 +207,43 @@ $urls_base64 = base64_encode(json_encode(array_column($productos, 'imagen_url'))
     <?php include("includes/footer.php"); ?>
 
     <script>
-    const urls = JSON.parse(atob("<?= $urls_base64 ?>"));
-    urls.forEach((url, i) => {
-        const img = document.getElementById('img-' + i);
-        if (img) {
-            img.style.height = '200px';
-            img.style.objectFit = 'contain';
-            img.style.padding = '10px';
-            img.style.backgroundColor = '#f8f9fa';
-            img.style.width = '100%';
-            img.style.display = 'block';
-            img.src = url;
+        // Cargar imágenes
+        const urls = JSON.parse(atob("<?= $urls_base64 ?>"));
+        urls.forEach((url, i) => {
+            const img = document.getElementById('img-' + i);
+            if (img) {
+                img.style.height = '200px';
+                img.style.objectFit = 'contain';
+                img.style.padding = '10px';
+                img.style.backgroundColor = '#f8f9fa';
+                img.style.width = '100%';
+                img.style.display = 'block';
+                img.src = url;
+            }
+        });
+
+        // Lógica del sidebar hamburguesa
+        const toggle    = document.getElementById('sidebar-toggle');
+        const sidebar   = document.getElementById('sidebar-col');
+        const overlay   = document.getElementById('sidebar-overlay');
+        const closeBtn  = document.getElementById('sidebar-close');
+
+        function openSidebar() {
+            sidebar.classList.add('open');
+            overlay.classList.add('open');
+            document.body.style.overflow = 'hidden'; // evita scroll del fondo
         }
-    });
-</script>
+
+        function closeSidebar() {
+            sidebar.classList.remove('open');
+            overlay.classList.remove('open');
+            document.body.style.overflow = '';
+        }
+
+        toggle.addEventListener('click', openSidebar);
+        closeBtn.addEventListener('click', closeSidebar);
+        overlay.addEventListener('click', closeSidebar);
+    </script>
 
 </body>
 </html>

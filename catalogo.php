@@ -49,6 +49,14 @@ $urls_base64 = base64_encode(json_encode(array_column($productos, 'imagen_url'))
     <title>Catalogo</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="assets/css/style.css">
+    <style>
+        .card-img-top {
+            height: 200px;
+            object-fit: contain;
+            padding: 10px;
+            background-color: #f8f9fa;
+        }
+    </style>
 </head>
 <?php include("includes/navbar.php"); ?>
 
@@ -128,12 +136,20 @@ $urls_base64 = base64_encode(json_encode(array_column($productos, 'imagen_url'))
     <?php include("includes/footer.php"); ?>
 
     <script>
-        const urls = JSON.parse(atob("<?= $urls_base64 ?>"));
-        urls.forEach((url, i) => {
-            const img = document.getElementById('img-' + i);
-            if (img) img.src = url;
-        });
-    </script>
+    const urls = JSON.parse(atob("<?= $urls_base64 ?>"));
+    urls.forEach((url, i) => {
+        const img = document.getElementById('img-' + i);
+        if (img) {
+            img.style.height = '200px';
+            img.style.objectFit = 'contain';
+            img.style.padding = '10px';
+            img.style.backgroundColor = '#f8f9fa';
+            img.style.width = '100%';
+            img.style.display = 'block';
+            img.src = url;
+        }
+    });
+</script>
 
 </body>
 </html>

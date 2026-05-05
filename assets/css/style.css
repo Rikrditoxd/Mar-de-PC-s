@@ -14,8 +14,6 @@ navbar{
     color: #0d6efd !important;
 }
 
-
-
 body { font-family: Arial, sans-serif; }
         .hero { background: linear-gradient(to right, #007bff, #28a745); color: white; padding: 100px 0; text-align: center; }
         .services { padding: 50px 0; }
@@ -32,8 +30,10 @@ body { font-family: Arial, sans-serif; }
 
 .card-img-top {
     width: 100%;
-    height: 220px !important;
-    object-fit: cover !important;
+    height: 220px;
+    object-fit: contain;
+    padding: 10px;
+    background-color: #f8f9fa;
 }
 
 .card-link {
@@ -55,11 +55,11 @@ body { font-family: Arial, sans-serif; }
     box-shadow: 0 5px 15px rgba(0,0,0,0.2);
 }
 
+
 .carousel-item img {
     height: 400px;
     object-fit: cover;
 }
-
 
 html, body {
     height: 100%;

@@ -9,4 +9,8 @@
 -- "olvide contraseña"
 -- seguimiento de pedido (mapa)
 -- preguntas frecuentes
--- 
+-- se puede comprar mas stock del que hay (o dejar en reserva)
+-- correo de seguimiento
+-- mas informacion de contacto en la pestaña de contacto y acceso a redes sociales
+-- meter los ALTS
+--autocompletar formularios de datos si el usuario esta logeado ( o quitarla )

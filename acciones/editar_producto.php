@@ -50,14 +50,13 @@ while ($row = $res_sub->fetch_assoc()) {
     <link rel="stylesheet" href="../assets/css/style.css">
 </head>
 <body>
-<?php include("../includes/navbar.php"); ?>
 
 <div class="container mt-4">
 
     <h2>Editar producto</h2>
 
     <!-- FORMULARIO PRINCIPAL -->
-    <form action="../acciones/actualizar_producto.php" method="POST">
+    <form action="../acciones/actualizar_producto.php" method="POST" enctype="multipart/form-data">
 
         <input type="hidden" name="id_producto" value="<?= (int)$producto['id_producto'] ?>">
 
@@ -73,8 +72,24 @@ while ($row = $res_sub->fetch_assoc()) {
         <label>Descripción</label>
         <input type="text" name="descripcion" value="<?= htmlspecialchars($producto['descripcion']) ?>" class="form-control">
 
-        <label>Imagen principal URL</label>
-        <input type="text" name="imagen_url" value="<?= htmlspecialchars($producto['imagen_url']) ?>" class="form-control">
+        <!-- ========================= -->
+        <!-- IMAGEN PRINCIPAL -->
+        <!-- ========================= -->
+        <label class="mt-3">Imagen principal</label>
+
+        <?php if (!empty($producto['imagen_url'])): ?>
+            <div class="mb-2">
+                <img src="<?= htmlspecialchars($producto['imagen_url']) ?>" width="120" class="img-thumbnail" alt="Imagen actual">
+                <small class="text-muted d-block mt-1">Imagen actual</small>
+            </div>
+        <?php endif; ?>
+
+        <label class="form-label small mt-2">Subir nueva imagen desde archivo <span class="text-muted">(JPG, PNG, GIF, WEBP · máx 5 MB)</span></label>
+        <input type="file" name="imagen_file" class="form-control mb-2" accept="image/jpeg,image/png,image/gif,image/webp">
+
+        <label class="form-label small">O indicar URL externa</label>
+        <input type="text" name="imagen_url" value="<?= htmlspecialchars($producto['imagen_url']) ?>" class="form-control" placeholder="https://...">
+        <small class="text-muted">Si subes un archivo, la URL se ignorará.</small>
 
         <!-- ========================= -->
         <!-- CATEGORÍA -->
@@ -144,11 +159,15 @@ while ($row = $res_sub->fetch_assoc()) {
     </ul>
 
     <!-- añadir imagen -->
-    <form action="../acciones/agregar_imagen.php" method="POST">
+    <form action="../acciones/agregar_imagen.php" method="POST" enctype="multipart/form-data">
         <input type="hidden" name="id_producto" value="<?= $producto['id_producto'] ?>">
 
-        <label>Nueva imagen</label>
-        <input type="text" name="imagen_url" class="form-control">
+        <label class="form-label small">Subir imagen desde archivo <span class="text-muted">(JPG, PNG, GIF, WEBP · máx 5 MB)</span></label>
+        <input type="file" name="imagen_file" class="form-control mb-2" accept="image/jpeg,image/png,image/gif,image/webp">
+
+        <label class="form-label small">O indicar URL externa</label>
+        <input type="text" name="imagen_url" class="form-control" placeholder="https://...">
+        <small class="text-muted">Si subes un archivo, la URL se ignorará.</small>
 
         <button class="btn btn-primary mt-2">Añadir imagen</button>
     </form>

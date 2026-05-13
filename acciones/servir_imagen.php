@@ -27,5 +27,6 @@ if (!$row || empty($row['imagen_data'])) {
 }
 
 header("Content-Type: " . ($row['imagen_mime'] ?: 'image/jpeg'));
-header("Cache-Control: public, max-age=86400");
+// No cacheamos: la URL ya incluye ?t= para busting, pero así nos aseguramos
+header("Cache-Control: no-cache, must-revalidate");
 echo $row['imagen_data'];

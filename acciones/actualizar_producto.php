@@ -14,11 +14,11 @@ if ($id <= 0) {
     exit();
 }
 
-$nombre      = trim($_POST['nombre']      ?? '');
-$precio      = (float)($_POST['precio']   ?? 0);
-$stock       = (int)($_POST['stock']      ?? 0);
-$descripcion = trim($_POST['descripcion'] ?? '');
-$id_categoria = (int)($_POST['id_categoria'] ?? 0);
+$nombre          = trim($_POST['nombre']         ?? '');
+$precio          = (float)($_POST['precio']      ?? 0);
+$stock           = (int)($_POST['stock']         ?? 0);
+$descripcion     = trim($_POST['descripcion']    ?? '');
+$id_categoria    = (int)($_POST['id_categoria']  ?? 0);
 $id_subcategoria = (isset($_POST['id_subcategoria']) && $_POST['id_subcategoria'] !== '')
     ? (int)$_POST['id_subcategoria']
     : null;
@@ -28,7 +28,7 @@ if (empty($nombre) || $precio <= 0) {
     exit();
 }
 
-// --- Imagen: el archivo tiene prioridad sobre la URL ---
+// ── Imagen ────────────────────────────────────────────────────
 $imagen_url  = trim($_POST['imagen_url'] ?? '');
 $imagen_data = null;
 $imagen_mime = null;
@@ -53,32 +53,44 @@ if (
 
     $imagen_data = file_get_contents($_FILES['imagen_file']['tmp_name']);
     $imagen_mime = $mime;
-    // URL raíz-relativa: funciona desde cualquier página del proyecto
-    $base = rtrim(dirname($_SERVER['PHP_SELF']), '/');
-    $imagen_url = $base . '/servir_imagen.php?tipo=producto&id=' . $id;
-    $usar_blob  = true;
+
+    // Añadimos ?t= para que el navegador nunca sirva la imagen cacheada
+    $base        = rtrim(dirname($_SERVER['PHP_SELF']), '/');
+    $imagen_url  = $base . '/servir_imagen.php?tipo=producto&id=' . $id . '&t=' . time();
+    $usar_blob   = true;
 }
 
-// --- UPDATE ---
+// ── UPDATE ────────────────────────────────────────────────────
 if ($usar_blob) {
-    // Guardar BLOB + nueva URL de servicio
+    // Primero actualizamos los campos escalares + imagen_url + imagen_mime
     $stmt = $conn->prepare(
         "UPDATE productos
          SET nombre=?, precio=?, stock=?, descripcion=?,
-             imagen_url=?, imagen_data=?, imagen_mime=?,
+             imagen_url=?, imagen_mime=?,
              id_categoria=?, id_subcategoria=?
          WHERE id_producto=?"
     );
-    $null = null;
     $stmt->bind_param(
-        "sdissbsiii",
+        "sdisssiii",
         $nombre, $precio, $stock, $descripcion,
-        $imagen_url, $null, $imagen_mime,
+        $imagen_url, $imagen_mime,
         $id_categoria, $id_subcategoria, $id
     );
-    $stmt->send_long_data(5, $imagen_data);
+    if (!$stmt->execute()) {
+        die("Error al actualizar producto: " . $stmt->error);
+    }
+    $stmt->close();
+
+    // Después actualizamos el BLOB por separado con tipo 's' (fiable en MySQLi)
+    $stmt2 = $conn->prepare("UPDATE productos SET imagen_data=? WHERE id_producto=?");
+    $stmt2->bind_param("si", $imagen_data, $id);
+    if (!$stmt2->execute()) {
+        die("Error al guardar imagen: " . $stmt2->error);
+    }
+    $stmt2->close();
+
 } else {
-    // Solo URL (o sin cambio de imagen): limpia cualquier blob anterior
+    // Solo URL: borra cualquier blob anterior
     $stmt = $conn->prepare(
         "UPDATE productos
          SET nombre=?, precio=?, stock=?, descripcion=?,
@@ -91,12 +103,11 @@ if ($usar_blob) {
         $nombre, $precio, $stock, $descripcion,
         $imagen_url, $id_categoria, $id_subcategoria, $id
     );
+    if (!$stmt->execute()) {
+        die("Error al actualizar producto: " . $stmt->error);
+    }
+    $stmt->close();
 }
 
-if (!$stmt->execute()) {
-    die("Error al actualizar producto: " . $stmt->error);
-}
-$stmt->close();
-
-header("Location: ../administracion.php");
+header("Location: editar_producto.php?id=$id&ok=1");
 exit();

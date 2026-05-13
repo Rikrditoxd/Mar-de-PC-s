@@ -1,31 +1,84 @@
-navbar{
-    display: flex;
-    background-color: gray;
+/* ═══════════════════════════════
+   GLOBAL
+═══════════════════════════════ */
+html {
+    scroll-behavior: smooth;
 }
+
+body {
+    font-family: Arial, sans-serif;
+    display: flex;
+    flex-direction: column;
+}
+
+html, body {
+    height: 100%;
+}
+
+main {
+    flex: 1;
+}
+
+/* ═══════════════════════════════
+   NAVBAR
+═══════════════════════════════ */
 .navbar-brand img {
     border-radius: 10px;
 }
 
 .nav-link {
-    transition: 0.2s;
+    transition: color .2s;
 }
 
 .nav-link:hover {
     color: #0d6efd !important;
 }
 
-body { font-family: Arial, sans-serif; }
-        .hero { background: linear-gradient(to right, #007bff, #28a745); color: white; padding: 100px 0; text-align: center; }
-        .services { padding: 50px 0; }
-        .contact { background-color: #f8f9fa; padding: 50px 0; }
-        .logo {
-            border-radius: 30px;
-        }
+/* Solo en pantallas grandes: logo centrado */
+@media (min-width: 992px) {
+    .navbar-center-desktop {
+        position: absolute;
+        left: 50%;
+        transform: translateX(-50%);
+    }
+}
 
+/* ═══════════════════════════════
+   HERO
+═══════════════════════════════ */
+.hero {
+    background: linear-gradient(135deg, #007bff 0%, #28a745 100%);
+    color: white;
+    padding: 80px 0;
+    text-align: center;
+}
+
+/* ═══════════════════════════════
+   SECCIONES
+═══════════════════════════════ */
+.services {
+    padding: 50px 0;
+}
+
+.contact {
+    background-color: #f8f9fa;
+    padding: 50px 0;
+}
+
+/* ═══════════════════════════════
+   CARDS (catálogo y generales)
+═══════════════════════════════ */
 .card {
     height: 100%;
     display: flex;
     flex-direction: column;
+    transition: transform .2s ease, box-shadow .2s ease;
+    cursor: pointer;
+}
+
+.card:hover {
+    transform: scale(1.02);
+    box-shadow: 0 4px 16px rgba(0, 0, 0, .15);
 }
 
 .card-img-top {
@@ -45,31 +98,24 @@ body { font-family: Arial, sans-serif; }
     color: inherit;
 }
 
-.card {
-    transition: transform 0.2s ease, box-shadow 0.2s ease;
-    cursor: pointer;
-}
-
-.card:hover {
-    transform: scale(1.03);
-    box-shadow: 0 5px 15px rgba(0,0,0,0.2);
-}
-
-
+/* ═══════════════════════════════
+   CAROUSEL
+═══════════════════════════════ */
 .carousel-item img {
     height: 400px;
     object-fit: cover;
 }
 
-html, body {
-    height: 100%;
+/* ═══════════════════════════════
+   LOGO
+═══════════════════════════════ */
+.logo {
+    border-radius: 30px;
 }
 
-body {
-    display: flex;
-    flex-direction: column;
-}
-
-main {
-    flex: 1;
+/* ═══════════════════════════════
+   FOOTER (asegura que se quede abajo)
+═══════════════════════════════ */
+footer {
+    margin-top: auto;
 }

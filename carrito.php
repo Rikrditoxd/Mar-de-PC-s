@@ -4,79 +4,92 @@ $carrito = $_SESSION['carrito'] ?? [];
 ?>
 
 <!DOCTYPE html>
-<html>
-
+<html lang="es">
 <head>
-    <title>Carrito</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Carrito - Mar de PC's</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="assets/css/style.css">
 </head>
-
 <body>
 
-    <?php include("includes/navbar.php"); ?>
+<?php include("includes/navbar.php"); ?>
 
-    <div class="container mt-5">
-        <h1>Tu carrito</h1>
+<div class="container mt-5">
+    <h1 class="mb-4">Tu carrito</h1>
 
-        <?php if (empty($carrito)): ?>
-            <p>El carrito está vacío</p>
-        <?php else: ?>
+    <?php if (empty($carrito)): ?>
+        <div class="alert alert-info">
+            El carrito está vacío.
+            <a href="catalogo.php" class="alert-link">Ver productos</a>
+        </div>
+    <?php else: ?>
 
-            <table class="table">
-                <thead>
+        <div class="table-responsive">
+            <table class="table align-middle">
+                <thead class="table-dark">
                     <tr>
                         <th>Producto</th>
                         <th>Precio</th>
                         <th>Cantidad</th>
-                        <th>Total</th>
+                        <th>Subtotal</th>
                         <th>Acciones</th>
                     </tr>
                 </thead>
-
                 <tbody>
                     <?php $total = 0; ?>
-
                     <?php foreach ($carrito as $id => $item):
-                        $subtotal = $item['precio'] * $item['cantidad'];
+                        $id_safe = (int)$id;
+                        $subtotal = (float)$item['precio'] * (int)$item['cantidad'];
                         $total += $subtotal;
-                        ?>
+                    ?>
                         <tr>
-                            <td><?= $item['nombre'] ?></td>
-                            <td><?= $item['precio'] ?> €</td>
+                            <td><?= htmlspecialchars($item['nombre']) ?></td>
+                            <td><?= number_format((float)$item['precio'], 2) ?> €</td>
 
-                            <!-- CANTIDAD -->
                             <td>
-                                <a href="acciones/actualizar_carrito.php?id=<?= $id ?>&accion=restar"
+                                <a href="acciones/actualizar_carrito.php?id=<?= $id_safe ?>&accion=restar"
                                     class="btn btn-sm btn-warning">-</a>
-                                <?= $item['cantidad'] ?>
-                                <a href="acciones/actualizar_carrito.php?id=<?= $id ?>&accion=sumar" class="btn btn-sm btn-success">+</a>
+                                <span class="mx-2"><?= (int)$item['cantidad'] ?></span>
+                                <a href="acciones/actualizar_carrito.php?id=<?= $id_safe ?>&accion=sumar"
+                                    class="btn btn-sm btn-success">+</a>
                             </td>
 
-                            <td><?= $subtotal ?> €</td>
+                            <td><?= number_format($subtotal, 2) ?> €</td>
 
-                            <!-- ELIMINAR -->
                             <td>
-                                <a href="acciones/eliminar_carrito.php?id=<?= $id ?>" class="btn btn-sm btn-danger">
+                                <a href="acciones/eliminar_carrito.php?id=<?= $id_safe ?>"
+                                    class="btn btn-sm btn-danger"
+                                    onclick="return confirm('¿Eliminar este producto del carrito?')">
                                     Eliminar
                                 </a>
                             </td>
                         </tr>
                     <?php endforeach; ?>
                 </tbody>
+                <tfoot>
+                    <tr>
+                        <td colspan="3" class="text-end fw-bold">Total:</td>
+                        <td class="fw-bold"><?= number_format($total, 2) ?> €</td>
+                        <td></td>
+                    </tr>
+                </tfoot>
             </table>
+        </div>
 
-            <h3>Total: <?= $total ?> €</h3>
+        <div class="d-flex gap-2 justify-content-end mt-3">
+            <a href="catalogo.php" class="btn btn-outline-secondary">Seguir comprando</a>
+            <?php if (isset($_SESSION['id_usuario'])): ?>
+                <a href="checkout.php" class="btn btn-success btn-lg">Finalizar compra</a>
+            <?php else: ?>
+                <a href="login.php" class="btn btn-primary btn-lg">Inicia sesión para comprar</a>
+            <?php endif; ?>
+        </div>
 
-            <a href="checkout.php" class="btn btn-success">
-                Finalizar compra
-            </a>
+    <?php endif; ?>
+</div>
 
-        <?php endif; ?>
-
-        
-    </div>
-    DISCLAIMER: ESTA ES UNA PAGINA WEB CON FINES EDUCATIVOS Y NO COMERCIALES, LOS PROCESOS DE COMPRA SON UNA SIMULACION
 <?php include("includes/footer.php"); ?>
 </body>
-
 </html>

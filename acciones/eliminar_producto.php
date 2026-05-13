@@ -1,21 +1,31 @@
 <?php
+session_start();
 include("../config/conexion.php");
 
-// Comprobar que viene el ID
+if (!isset($_SESSION['id_usuario']) || $_SESSION['administrador'] != 1) {
+    header("Location: ../index.php");
+    exit();
+}
+
 if (!isset($_POST['id'])) {
-    die("ID no recibido");
+    header("Location: ../administracion.php");
+    exit();
 }
 
-$id = $_POST['id'];
+$id = (int)$_POST['id'];
 
-// Consulta para eliminar
-$sql = "DELETE FROM productos WHERE id_producto = $id";
-
-if (!$conn->query($sql)) {
-    die("Error al eliminar: " . $conn->error);
+if ($id <= 0) {
+    header("Location: ../administracion.php");
+    exit();
 }
 
-// Redirigir de vuelta al admin
+$stmt = $conn->prepare("DELETE FROM productos WHERE id_producto = ?");
+$stmt->bind_param("i", $id);
+if (!$stmt->execute()) {
+    die("Error al eliminar producto");
+}
+$stmt->close();
+
 header("Location: ../administracion.php");
 exit();
 ?>

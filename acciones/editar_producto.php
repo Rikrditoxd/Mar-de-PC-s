@@ -1,9 +1,15 @@
 <?php
+session_start();
 include("../config/conexion.php");
 
-// comprobar id
+if (!isset($_SESSION['id_usuario']) || $_SESSION['administrador'] != 1) {
+    header("Location: ../index.php");
+    exit();
+}
+
 if (!isset($_GET['id'])) {
-    die("ID no recibido");
+    header("Location: ../administracion.php");
+    exit();
 }
 
 $id = intval($_GET['id']);
@@ -34,10 +40,17 @@ while ($row = $res_sub->fetch_assoc()) {
 }
 ?>
 
+<!DOCTYPE html>
+<html lang="es">
 <head>
-    <title>Editar producto</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Editar producto - Mar de PC's</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="../assets/css/style.css">
 </head>
+<body>
+<?php include("../includes/navbar.php"); ?>
 
 <div class="container mt-4">
 
@@ -46,22 +59,22 @@ while ($row = $res_sub->fetch_assoc()) {
     <!-- FORMULARIO PRINCIPAL -->
     <form action="../acciones/actualizar_producto.php" method="POST">
 
-        <input type="hidden" name="id_producto" value="<?= $producto['id_producto'] ?>">
+        <input type="hidden" name="id_producto" value="<?= (int)$producto['id_producto'] ?>">
 
         <label>Nombre</label>
-        <input type="text" name="nombre" value="<?= $producto['nombre'] ?>" class="form-control">
+        <input type="text" name="nombre" value="<?= htmlspecialchars($producto['nombre']) ?>" class="form-control" required>
 
         <label>Precio</label>
-        <input type="number" step="0.01" name="precio" value="<?= $producto['precio'] ?>" class="form-control">
+        <input type="number" step="0.01" name="precio" value="<?= htmlspecialchars($producto['precio']) ?>" class="form-control" required min="0">
 
         <label>Stock</label>
-        <input type="number" name="stock" value="<?= $producto['stock'] ?>" class="form-control">
+        <input type="number" name="stock" value="<?= htmlspecialchars($producto['stock']) ?>" class="form-control" min="0">
 
         <label>Descripción</label>
-        <input type="text" name="descripcion" value="<?= $producto['descripcion'] ?>" class="form-control">
+        <input type="text" name="descripcion" value="<?= htmlspecialchars($producto['descripcion']) ?>" class="form-control">
 
         <label>Imagen principal URL</label>
-        <input type="text" name="imagen_url" value="<?= $producto['imagen_url'] ?>" class="form-control">
+        <input type="text" name="imagen_url" value="<?= htmlspecialchars($producto['imagen_url']) ?>" class="form-control">
 
         <!-- ========================= -->
         <!-- CATEGORÍA -->
@@ -70,9 +83,9 @@ while ($row = $res_sub->fetch_assoc()) {
         <select name="id_categoria" id="categoria" class="form-control">
 
             <?php while ($cat = $categorias->fetch_assoc()): ?>
-                <option value="<?= $cat['id_categoria'] ?>"
+                <option value="<?= (int)$cat['id_categoria'] ?>"
                     <?= ($producto['id_categoria'] == $cat['id_categoria']) ? 'selected' : '' ?>>
-                    <?= $cat['nombre'] ?>
+                    <?= htmlspecialchars($cat['nombre']) ?>
                 </option>
             <?php endwhile; ?>
 
@@ -89,10 +102,10 @@ while ($row = $res_sub->fetch_assoc()) {
 
             <?php foreach ($subcategorias as $id_cat => $subs): ?>
                 <?php foreach ($subs as $sub): ?>
-                    <option value="<?= $sub['id_subcategoria'] ?>"
-                        data-cat="<?= $sub['id_categoria'] ?>"
+                    <option value="<?= (int)$sub['id_subcategoria'] ?>"
+                        data-cat="<?= (int)$sub['id_categoria'] ?>"
                         <?= ($producto['id_subcategoria'] == $sub['id_subcategoria']) ? 'selected' : '' ?>>
-                        <?= $sub['nombre'] ?>
+                        <?= htmlspecialchars($sub['nombre']) ?>
                     </option>
                 <?php endforeach; ?>
             <?php endforeach; ?>
@@ -120,10 +133,10 @@ while ($row = $res_sub->fetch_assoc()) {
     <ul class="list-group mb-3">
         <?php while ($img = $imagenes->fetch_assoc()): ?>
             <li class="list-group-item d-flex justify-content-between align-items-center">
-                <img src="<?= $img['imagen_url'] ?>" width="80">
+                <img src="<?= htmlspecialchars($img['imagen_url']) ?>" width="80" alt="Imagen producto">
 
                 <form action="../acciones/eliminar_imagen.php" method="POST">
-                    <input type="hidden" name="id_imagen" value="<?= $img['id_imagen'] ?>">
+                    <input type="hidden" name="id_imagen" value="<?= (int)$img['id_imagen'] ?>">
                     <button class="btn btn-danger btn-sm">Eliminar</button>
                 </form>
             </li>
@@ -140,15 +153,13 @@ while ($row = $res_sub->fetch_assoc()) {
         <button class="btn btn-primary mt-2">Añadir imagen</button>
     </form>
 
-    <form action="../administracion.php">
-        <button class="btn btn-danger mt-3">Volver</button>
-    </form>
+    <a href="../administracion.php" class="btn btn-secondary mt-3">Volver</a>
 
 </div>
 
-<!-- ========================= -->
+<?php include("../includes/footer.php"); ?>
+
 <!-- JS FILTRO SUBCATEGORÍA -->
-<!-- ========================= -->
 <script>
 const subcategorias = <?= json_encode($subcategorias); ?>;
 
@@ -174,3 +185,5 @@ function filtrarSub() {
 
 categoria.addEventListener("change", filtrarSub);
 </script>
+</body>
+</html>

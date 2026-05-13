@@ -2,73 +2,94 @@
 session_start();
 include("../config/conexion.php");
 
+if (!isset($_SESSION['id_usuario'])) {
+    header("Location: ../login.php");
+    exit();
+}
+
 $carrito = $_SESSION['carrito'] ?? [];
 
 if (empty($carrito)) {
-    die("El carrito está vacío");
+    header("Location: ../carrito.php");
+    exit();
 }
 
-// ⚠️ IMPORTANTE: cambia esto por tu sesión real de usuario
-$id_usuario = $_SESSION['id_usuario'] ?? 1;
+$id_usuario = (int)$_SESSION['id_usuario'];
 
-// Datos del formulario
-$direccion = $_POST['direccion'] . ", " . $_POST['ciudad'] . " (" . $_POST['cp'] . ")";
+$dir = trim($_POST['direccion'] ?? '');
+$ciudad = trim($_POST['ciudad'] ?? '');
+$cp = trim($_POST['cp'] ?? '');
 
-// 🔢 Calcular total
+if (empty($dir) || empty($ciudad) || empty($cp)) {
+    echo "<script>
+        alert('Por favor completa todos los campos de dirección');
+        window.location.href = '../checkout.php';
+    </script>";
+    exit();
+}
+
+$direccion = htmlspecialchars($dir) . ", " . htmlspecialchars($ciudad) . " (" . htmlspecialchars($cp) . ")";
+
+// Calcular total
 $total = 0;
 foreach ($carrito as $item) {
-    $total += $item['precio'] * $item['cantidad'];
+    $total += (float)$item['precio'] * (int)$item['cantidad'];
 }
 
-// 🧾 1. Insertar pedido
-$sql_pedido = "INSERT INTO pedidos (id_usuario, estado, total, direccion_envio, creado_en)
-               VALUES ('$id_usuario', 'pendiente', '$total', '$direccion', NOW())";
-
-if (!$conn->query($sql_pedido)) {
-    die("Error al crear pedido: " . $conn->error);
+// 1. Insertar pedido
+$stmt_pedido = $conn->prepare("INSERT INTO pedidos (id_usuario, estado, total, direccion_envio, creado_en) VALUES (?, 'pendiente', ?, ?, NOW())");
+$stmt_pedido->bind_param("ids", $id_usuario, $total, $direccion);
+if (!$stmt_pedido->execute()) {
+    die("Error al crear pedido");
 }
-
-// 📌 Obtener ID del pedido
 $id_pedido = $conn->insert_id;
+$stmt_pedido->close();
 
-// 📦 2. Insertar productos
+// 2. Insertar líneas del pedido
+$stmt_item = $conn->prepare("INSERT INTO pedido_items (id_pedido, id_producto, cantidad, precio_unidad) VALUES (?, ?, ?, ?)");
+
 foreach ($carrito as $id_producto => $item) {
-
-    $cantidad = $item['cantidad'];
-    $precio = $item['precio'];
-
-    $sql_item = "INSERT INTO pedido_items (id_pedido, id_producto, cantidad, precio_unidad)
-                 VALUES ('$id_pedido', '$id_producto', '$cantidad', '$precio')";
-
-    if (!$conn->query($sql_item)) {
-        die("Error al insertar producto: " . $conn->error);
+    $id_prod = (int)$id_producto;
+    $cantidad = (int)$item['cantidad'];
+    $precio = (float)$item['precio'];
+    $stmt_item->bind_param("iiid", $id_pedido, $id_prod, $cantidad, $precio);
+    if (!$stmt_item->execute()) {
+        die("Error al insertar línea de pedido");
     }
 }
+$stmt_item->close();
 
-// 🧹 3. Vaciar carrito
+// 3. Vaciar carrito
 unset($_SESSION['carrito']);
+
+$stmt_del = $conn->prepare("DELETE FROM carrito WHERE id_usuario = ?");
+$stmt_del->bind_param("i", $id_usuario);
+$stmt_del->execute();
+$stmt_del->close();
 ?>
 
 <!DOCTYPE html>
-<html>
+<html lang="es">
 <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Compra completada</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="../assets/css/style.css">
 </head>
-
 <body>
+<?php include("../includes/navbar.php"); ?>
 
 <div class="container mt-5 text-center">
-    <h1>✅ Compra realizada</h1>
-    <p>Tu pedido ha sido registrado correctamente</p>
-    <?php 
-        $conn->query("DELETE FROM carrito WHERE id_usuario = '$id_usuario'");
-    ?>
-
-    <a href="../index.php" class="btn btn-primary">
-        Volver a la tienda
-    </a>
+    <div class="card shadow p-5 mx-auto" style="max-width:500px;">
+        <h1 class="text-success mb-3">Compra realizada</h1>
+        <p class="lead">Tu pedido #<?= $id_pedido ?> ha sido registrado correctamente.</p>
+        <p class="text-muted">Recibirás confirmación en cuanto sea procesado.</p>
+        <a href="../index.php" class="btn btn-primary mt-3">Volver a la tienda</a>
+        <a href="../pedidos.php" class="btn btn-outline-secondary mt-2">Ver mis pedidos</a>
+    </div>
 </div>
 
+<?php include("../includes/footer.php"); ?>
 </body>
 </html>

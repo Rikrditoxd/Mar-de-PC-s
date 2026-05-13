@@ -2,13 +2,21 @@
 session_start();
 include("../config/conexion.php");
 
-$id_usuario = $_SESSION['id_usuario'] ?? 1;
+if (!isset($_SESSION['id_usuario'])) {
+    header("Location: ../login.php");
+    exit();
+}
 
-$id = $_POST['id_producto'];
-$nombre = $_POST['nombre'];
-$precio = $_POST['precio'];
+$id_usuario = (int)$_SESSION['id_usuario'];
+$id = (int)($_POST['id_producto'] ?? 0);
+$nombre = trim($_POST['nombre'] ?? '');
+$precio = (float)($_POST['precio'] ?? 0);
 
-// 🧠 SESSION
+if ($id <= 0) {
+    header("Location: ../catalogo.php");
+    exit();
+}
+
 if (!isset($_SESSION['carrito'])) {
     $_SESSION['carrito'] = [];
 }
@@ -23,12 +31,12 @@ if (isset($_SESSION['carrito'][$id])) {
     ];
 }
 
-// 💾 BD → insertar o actualizar
-$sql = "INSERT INTO carrito (id_usuario, id_producto, cantidad)
-        VALUES ('$id_usuario', '$id', 1)
-        ON DUPLICATE KEY UPDATE cantidad = cantidad + 1";
-
-$conn->query($sql);
+$stmt = $conn->prepare("INSERT INTO carrito (id_usuario, id_producto, cantidad)
+    VALUES (?, ?, 1)
+    ON DUPLICATE KEY UPDATE cantidad = cantidad + 1");
+$stmt->bind_param("ii", $id_usuario, $id);
+$stmt->execute();
+$stmt->close();
 
 header("Location: ../carrito.php");
 exit();

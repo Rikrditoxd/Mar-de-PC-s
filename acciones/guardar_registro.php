@@ -1,39 +1,88 @@
 <?php
+session_start();
 include("../config/conexion.php");
 
-$nombre = $_POST['nombre'];
-$apellidos = $_POST['apellidos'];
-$email = $_POST['email'];
-$password = password_hash($_POST['password'], PASSWORD_DEFAULT);
-$telefono = $_POST['telefono'];
-$direccion = $_POST['direccion'];
-$ciudad = $_POST['ciudad'];
-$codigo_postal = $_POST['codigo_postal'];
+$nombre = trim($_POST['nombre'] ?? '');
+$apellidos = trim($_POST['apellidos'] ?? '');
+$email = trim($_POST['email'] ?? '');
+$password_raw = $_POST['password'] ?? '';
+$password_confirm = $_POST['password_confirm'] ?? '';
+$telefono = trim($_POST['telefono'] ?? '');
+$direccion = trim($_POST['direccion'] ?? '');
+$ciudad = trim($_POST['ciudad'] ?? '');
+$codigo_postal = trim($_POST['codigo_postal'] ?? '');
 
-// comprobar si ya existe
-$check = "SELECT id_usuario FROM usuarios WHERE email = '$email'";
-$result = $conn->query($check);
+// Validaciones básicas
+if (empty($nombre) || empty($apellidos) || empty($email) || empty($password_raw)) {
+    echo "<script>
+        alert('Los campos Nombre, Apellidos, Email y Contraseña son obligatorios');
+        window.location.href = '../registro.php';
+    </script>";
+    exit();
+}
 
-if ($result->num_rows > 0) {
+if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
+    echo "<script>
+        alert('El correo electrónico no es válido');
+        window.location.href = '../registro.php';
+    </script>";
+    exit();
+}
+
+if (strlen($password_raw) < 6) {
+    echo "<script>
+        alert('La contraseña debe tener al menos 6 caracteres');
+        window.location.href = '../registro.php';
+    </script>";
+    exit();
+}
+
+if ($password_raw !== $password_confirm) {
+    echo "<script>
+        alert('Las contraseñas no coinciden');
+        window.location.href = '../registro.php';
+    </script>";
+    exit();
+}
+
+// Comprobar si ya existe
+$stmt_check = $conn->prepare("SELECT id_usuario FROM usuarios WHERE email = ?");
+$stmt_check->bind_param("s", $email);
+$stmt_check->execute();
+$stmt_check->store_result();
+
+if ($stmt_check->num_rows > 0) {
+    $stmt_check->close();
     echo "<script>
         alert('Este correo ya está registrado, intente con otro');
         window.location.href = '../registro.php';
     </script>";
     exit();
 }
+$stmt_check->close();
 
-/* INSERT si no existe */
-$sql = "INSERT INTO usuarios 
-(nombre, apellidos, email, password, telefono, direccion, ciudad, codigo_postal, administrador, activo)
-VALUES 
-('$nombre', '$apellidos', '$email', '$password', '$telefono', '$direccion', '$ciudad', '$codigo_postal', 0, 1)";
+$password = password_hash($password_raw, PASSWORD_DEFAULT);
 
-if (!$conn->query($sql)) {
-    die("Error: " . $conn->error);
+$stmt = $conn->prepare("INSERT INTO usuarios
+    (nombre, apellidos, email, password, telefono, direccion, ciudad, codigo_postal, administrador, activo)
+    VALUES (?, ?, ?, ?, ?, ?, ?, ?, 0, 1)");
+$stmt->bind_param("ssssssss", $nombre, $apellidos, $email, $password, $telefono, $direccion, $ciudad, $codigo_postal);
+
+if (!$stmt->execute()) {
+    die("Error al registrar usuario");
 }
 
+$id_nuevo = $conn->insert_id;
+$stmt->close();
+
+// Iniciar sesión automáticamente tras el registro
+$_SESSION['id_usuario'] = $id_nuevo;
+$_SESSION['nombre'] = $nombre;
+$_SESSION['administrador'] = 0;
+$_SESSION['carrito'] = [];
+
 echo "<script>
-    alert('Usuario registrado correctamente');
+    alert('Usuario registrado correctamente. ¡Bienvenido!');
     window.location.href = '../index.php';
 </script>";
 exit();

@@ -2,17 +2,25 @@
 session_start();
 include("../config/conexion.php");
 
-$id_usuario = $_SESSION['id_usuario'] ?? 1;
-$id = $_GET['id'];
+if (!isset($_SESSION['id_usuario'])) {
+    header("Location: ../login.php");
+    exit();
+}
 
-// SESSION
+$id_usuario = (int)$_SESSION['id_usuario'];
+$id = (int)($_GET['id'] ?? 0);
+
+if ($id <= 0) {
+    header("Location: ../carrito.php");
+    exit();
+}
+
 unset($_SESSION['carrito'][$id]);
 
-// BD
-$conn->query("
-    DELETE FROM carrito 
-    WHERE id_usuario = '$id_usuario' AND id_producto = '$id'
-");
+$stmt = $conn->prepare("DELETE FROM carrito WHERE id_usuario = ? AND id_producto = ?");
+$stmt->bind_param("ii", $id_usuario, $id);
+$stmt->execute();
+$stmt->close();
 
 header("Location: ../carrito.php");
 exit();

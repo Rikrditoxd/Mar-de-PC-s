@@ -2,11 +2,21 @@
 session_start();
 include("../config/conexion.php");
 
-$email = $_POST['email'];
+if (empty($_POST['email']) || empty($_POST['password'])) {
+    echo "<script>
+        alert('Email y contraseña son obligatorios');
+        window.location.href = '../login.php';
+    </script>";
+    exit();
+}
+
+$email = trim($_POST['email']);
 $password = $_POST['password'];
 
-$sql = "SELECT * FROM usuarios WHERE email = '$email'";
-$result = $conn->query($sql);
+$stmt = $conn->prepare("SELECT * FROM usuarios WHERE email = ?");
+$stmt->bind_param("s", $email);
+$stmt->execute();
+$result = $stmt->get_result();
 
 if ($result->num_rows == 0) {
     echo "<script>
@@ -17,6 +27,7 @@ if ($result->num_rows == 0) {
 }
 
 $user = $result->fetch_assoc();
+$stmt->close();
 
 /* Verificar contraseña encriptada */
 if (!password_verify($password, $user['password'])) {
@@ -32,18 +43,21 @@ $_SESSION['id_usuario'] = $user['id_usuario'];
 $_SESSION['nombre'] = $user['nombre'];
 $_SESSION['administrador'] = $user['administrador'];
 
-/* 🔄 CARGAR CARRITO DESDE BD */
+/* CARGAR CARRITO DESDE BD */
 $id_usuario = $user['id_usuario'];
 
-$sql_carrito = "SELECT c.*, p.nombre, p.precio 
+$stmt_carrito = $conn->prepare("SELECT c.*, p.nombre, p.precio
                 FROM carrito c
                 JOIN productos p ON c.id_producto = p.id_producto
-                WHERE c.id_usuario = '$id_usuario'";
-
-$result_carrito = $conn->query($sql_carrito);
+                WHERE c.id_usuario = ?");
+$stmt_carrito->bind_param("i", $id_usuario);
+$stmt_carrito->execute();
+$result_carrito = $stmt_carrito->get_result();
 
 // Reiniciar carrito en sesión
 $_SESSION['carrito'] = [];
+
+$stmt_carrito->close();
 
 while ($row = $result_carrito->fetch_assoc()) {
     $_SESSION['carrito'][$row['id_producto']] = [

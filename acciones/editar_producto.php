@@ -78,7 +78,7 @@ if ($preview_url && strpos($preview_url, 'servir_imagen.php') !== false) {
 </head>
 <body>
 
-<?php include("../includes/navbar.php"); ?>
+
 
 <div class="container my-4">
 
